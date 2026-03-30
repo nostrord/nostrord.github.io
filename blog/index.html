@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Nostrord blog — updates, technical deep-dives on NIP-29, Kotlin Multiplatform, WebAssembly, and news from the Nostrord team building decentralized group chat on Nostr.">
+  <meta name="keywords" content="Nostrord blog, NIP-29, Nostr group chat, Kotlin Multiplatform, WebAssembly, decentralized chat, censorship resistant">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#09090b">
+  <link rel="canonical" href="https://nostrord.com/blog/">
+
+  <title>Blog — Nostrord</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Blog — Nostrord">
+  <meta property="og:description" content="Updates, technical deep-dives, and news from the Nostrord team building decentralized group chat on Nostr.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nostrord.com/blog/">
+  <meta property="og:image" content="https://nostrord.com/assets/img/nostrord-app.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Nostrord">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Blog — Nostrord">
+  <meta name="twitter:description" content="Updates, technical deep-dives, and news from the Nostrord team building decentralized group chat on Nostr.">
+  <meta name="twitter:image" content="https://nostrord.com/assets/img/nostrord-app.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="/" class="logo">
+          <img class="logo-mark" src="/assets/img/nostrord.svg" alt="Nostrord logo">
+          <span class="logo-text">NOSTRORD</span>
+        </a>
+        <div class="nav-actions">
+          <a href="/#why" class="nav-link">Why</a>
+          <a href="/#features" class="nav-link">Features</a>
+          <a href="/#platforms" class="nav-link">Platforms</a>
+          <a href="./" class="nav-link" aria-current="page">Blog</a>
+          <a href="/#faq" class="nav-link">FAQ</a>
+          <a href="/#community" class="nav-link">Community</a>
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+          <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" title="Open menu">
+            <svg class="menu-icon icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            <svg class="menu-icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <!-- Sun icon (light mode) -->
+            <svg class="theme-icon icon-light" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (dark mode) -->
+            <svg class="theme-icon icon-dark" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <!-- Monitor icon (system mode) -->
+            <svg class="theme-icon icon-system" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </button>
+          <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-launch">Launch App</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="/#why" class="nav-link">Why</a>
+    <a href="/#features" class="nav-link">Features</a>
+    <a href="/#platforms" class="nav-link">Platforms</a>
+    <a href="./" class="nav-link" aria-current="page">Blog</a>
+    <a href="/#faq" class="nav-link">FAQ</a>
+    <a href="/#community" class="nav-link">Community</a>
+    <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+    <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-launch">Launch App</a>
+  </nav>
+
+  <!-- Blog listing -->
+  <main>
+    <section class="blog-section">
+      <div class="container">
+        <div class="blog-section-header">
+          <h1>Blog<span>.</span></h1>
+          <p>Updates, technical deep-dives, and news from the Nostrord team.</p>
+        </div>
+
+        <div class="blog-list">
+
+          <!-- Post: Introducing Nostrord -->
+          <a href="introducing-nostrord.html" class="blog-card">
+            <div class="blog-card-meta">
+              <span>March 30, 2026</span>
+              <span class="blog-meta-sep">·</span>
+              <span>The Nostrord Team</span>
+              <span class="blog-meta-sep">·</span>
+              <span>7 min read</span>
+            </div>
+            <h2>Introducing Nostrord: A NIP-29 Group Chat Client for Sovereign Communities</h2>
+            <p>We're launching Nostrord, a NIP-29 client for relay-based group chat on Nostr. Built with Kotlin Multiplatform and WebAssembly, it runs in your browser today, and native apps for Android, iOS, and desktop are on the way.</p>
+            <div class="blog-card-tags">
+              <span class="blog-tag">NIP-29</span>
+              <span class="blog-tag secondary">Kotlin Multiplatform</span>
+              <span class="blog-tag secondary">WebAssembly</span>
+            </div>
+            <span class="blog-card-read-more">
+              Read more
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://github.com/nostrord/nostrord/issues" target="_blank" rel="noopener noreferrer">Report Issue</a>
+          <a href="https://nostr.com" target="_blank" rel="noopener noreferrer">Nostr</a>
+          <a href="https://github.com/nostr-protocol/nips/blob/master/29.md" target="_blank" rel="noopener noreferrer">NIP-29</a>
+        </div>
+        <span class="footer-copy">Open source. Contributions welcome.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/theme.js"></script>
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      mobileNav.classList.toggle('active');
+      document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+    });
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+</body>
+</html>

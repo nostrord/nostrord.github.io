@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nostrord is a NIP-29 client for decentralized group chat on Nostr. Built with Kotlin Multiplatform (KMP) and Compose. Relay-enforced moderation, censorship-resistant communities, cryptographic identity. No servers, no sign-up, no lock-in.">
+  <meta name="keywords" content="Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat, Nostr client, relay-managed groups, open source chat, Nostr communities, Kotlin Multiplatform, KMP, Compose Multiplatform">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#09090b">
+  <link rel="canonical" href="https://nostrord.com/">
+
+  <title>Nostrord — Decentralized Group Chat · NIP-29 Nostr Client</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Nostrord — Decentralized Group Chat on Nostr">
+  <meta property="og:description" content="Create and join NIP-29 groups on Nostr. Relay-enforced moderation, cryptographic identity, censorship-resistant communities. Web app available now.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://nostrord.com/">
+  <meta property="og:image" content="https://nostrord.com/assets/img/nostrord-app.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="Nostrord">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Nostrord — Decentralized Group Chat on Nostr">
+  <meta name="twitter:description" content="Create and join NIP-29 groups on Nostr. Relay-enforced moderation, cryptographic identity, censorship-resistant.">
+  <meta name="twitter:image" content="https://nostrord.com/assets/img/nostrord-app.png">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Nostrord",
+    "applicationCategory": "CommunicationApplication",
+    "operatingSystem": "Web, Android, iOS, Windows, macOS, Linux",
+    "description": "NIP-29 client for decentralized group chat on Nostr. Built with Kotlin Multiplatform (KMP) and Compose. Relay-enforced moderation, censorship-resistant communities, and cryptographic identity. No sign-up required.",
+    "url": "https://nostrord.com/",
+    "downloadUrl": "https://web.nostrord.com/",
+    "softwareVersion": "beta",
+    "license": "https://github.com/nostrord/nostrord/blob/main/LICENSE",
+    "sameAs": [
+      "https://github.com/nostrord/nostrord",
+      "https://web.nostrord.com/"
+    ],
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "keywords": "Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat"
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <a href="#" class="logo">
+          <img class="logo-mark" src="assets/img/nostrord.svg" alt="Nostrord logo">
+          <span class="logo-text">NOSTRORD</span>
+        </a>
+        <div class="nav-actions">
+          <a href="#why" class="nav-link">Why</a>
+          <a href="#features" class="nav-link">Features</a>
+          <a href="#platforms" class="nav-link">Platforms</a>
+          <a href="blog/" class="nav-link">Blog</a>
+          <a href="#faq" class="nav-link">FAQ</a>
+          <a href="#community" class="nav-link">Community</a>
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+          <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" title="Open menu">
+            <svg class="menu-icon icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            <svg class="menu-icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+            <!-- Sun icon (light mode) -->
+            <svg class="theme-icon icon-light" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (dark mode) -->
+            <svg class="theme-icon icon-dark" viewBox="0 0 24 24">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+            <!-- Monitor icon (system mode) -->
+            <svg class="theme-icon icon-system" viewBox="0 0 24 24">
+              <rect x="2" y="3" width="20" height="14" rx="2"/>
+              <line x1="8" y1="21" x2="16" y2="21"/>
+              <line x1="12" y1="17" x2="12" y2="21"/>
+            </svg>
+          </button>
+          <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-launch">Launch App</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Nav -->
+  <nav class="mobile-nav" id="mobile-nav">
+    <a href="#why" class="nav-link">Why</a>
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#platforms" class="nav-link">Platforms</a>
+    <a href="blog/" class="nav-link">Blog</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#community" class="nav-link">Community</a>
+    <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+    <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-launch">Launch App</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <div class="hero-tag">NIP-29 Decentralized Group Chat</div>
+          <h1>Own your <span>communities</span></h1>
+          <p class="hero-desc">
+            Nostrord is a NIP-29 client for decentralized group chat on Nostr. Create censorship-resistant communities on any relay with admin roles, moderation, and access control built in. Your account is a cryptographic key you own, not a username on a server.
+          </p>
+          <div class="hero-buttons">
+            <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+              Open Web App
+            </a>
+            <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              View Source
+            </a>
+          </div>
+          <div class="hero-meta">
+            <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="github-stars-link" aria-label="Star Nostrord on GitHub">
+              <img src="https://img.shields.io/github/stars/nostrord/nostrord?style=flat&label=Stars&color=8b5cf6&labelColor=27272a&logo=github" alt="GitHub stars for Nostrord" class="github-stars-badge" width="100" height="20" loading="lazy">
+            </a>
+          </div>
+        </div>
+
+        <img src="assets/img/nostrord-app.png" class="hero-screenshot" alt="Nostrord — NIP-29 group chat client interface showing groups, messages and relay management" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section class="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-value"><span>0</span></div>
+          <div class="stat-label">Central Servers</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">100<span>%</span></div>
+          <div class="stat-label">Open Source</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value"><span>0</span></div>
+          <div class="stat-label">Tracking</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value"><span>&#8734;</span></div>
+          <div class="stat-label">Relays Supported</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="why" id="why">
+    <div class="container">
+      <div class="why-header">
+        <h2>Why choose a decentralized group chat?</h2>
+        <p>A focused NIP-29 client built for communities, not timelines</p>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Censorship Resistant</h3>
+          <p>No company can ban your community or delete your messages. Groups live on independent relays you choose, and you can always move to another one. Your voice, your rules.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3>Instant Account</h3>                                                                                                                                                                             
+          <p>Generate a key and start chatting in seconds. No email, no phone number, no verification. Your account is a cryptographic key, not a form to fill.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/>
+              <rect x="8" y="2" width="14" height="14" rx="2"/>
+            </svg>
+          </div>
+          <h3>Interoperable</h3>
+          <p>Your groups and messages are standard Nostr events, visible in any NIP-29 client. Use Nostrord today, switch to Flotilla, 0xChat, or Chachi tomorrow. Your data follows you, not the app.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bento Features -->
+  <section class="bento" id="features">
+    <div class="container">
+      <div class="bento-header">
+        <h2>Everything a censorship-resistant group chat needs</h2>
+        <p>Relay-enforced moderation, cryptographic identity, and open source code</p>
+      </div>
+      <div class="bento-grid">
+        <!-- Wide card: Protocol -->
+        <div class="bento-card wide">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Built on Nostr Protocol</h3>
+          <p>Messages are cryptographically signed events propagated through a network of relays. No central point of failure, no company to trust, no data to harvest.</p>
+          <div class="nip-badges">
+            <span class="nip-badge primary">NIP-29</span>
+            <span class="nip-badge">NIP-01</span>
+            <span class="nip-badge">NIP-07</span>
+            <span class="nip-badge">NIP-09</span>
+            <span class="nip-badge">NIP-11</span>
+            <span class="nip-badge">NIP-19</span>
+            <span class="nip-badge">NIP-27</span>
+            <span class="nip-badge">NIP-42</span>
+            <span class="nip-badge">NIP-44</span>
+            <span class="nip-badge">NIP-46</span>
+            <span class="nip-badge">NIP-57</span>
+            <span class="nip-badge">NIP-65</span>
+            <span class="nip-badge">NIP-98</span>
+          </div>
+        </div>
+
+        <!-- Tall card: Identity -->
+        <div class="bento-card tall">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>Your Keys, Your Account</h3>
+          <p>A Nostr account is a cryptographic key you control. Your profile and messages live on relays, but your identity is yours alone. No relay can revoke it or impersonate you. Generate a new key to sign up, or sign in with an existing account via browser extension, remote signer, or by pasting your key directly.</p>
+          <div class="code-block">
+            <pre>{
+  <span class="code-key">"pubkey"</span>: <span class="code-string">"a1b2c3..."</span>,
+  <span class="code-key">"kind"</span>: <span class="code-number">0</span>,
+  <span class="code-key">"content"</span>: <span class="code-string">"{"name":"you","about":"..."}"</span>,
+  <span class="code-key">"sig"</span>: <span class="code-string">"..."</span>
+}</pre>
+          </div>
+        </div>
+
+        <!-- Regular cards -->
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>NIP-29 Groups</h3>
+          <p>Groups live on relays, not on a central server. Each group has admin roles, moderation events, and access control: public or private, fully relay-enforced.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <circle cx="12" cy="16" r="1"/>
+            </svg>
+          </div>
+          <h3>Remote Signer</h3>
+          <p>Sign in with a NIP-46 bunker via URL or QR code. Your private keys stay on a dedicated signing device and never touch the app. Full support for Nostr Connect.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <h3>Rich Messaging</h3>
+          <p>Replies, @mentions, emoji reactions, and media uploads. All sent as cryptographically signed Nostr events.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <h3>Multiplatform</h3>
+          <p>Built with Kotlin Multiplatform (KMP) and Compose. Runs in any modern browser today. Native apps for Android, iOS, and desktop coming soon.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms -->
+  <section class="platforms" id="platforms">
+    <div class="container">
+      <div class="platforms-header">
+        <h2>Available Everywhere</h2>
+        <p>Web app available now. Native apps for Android, iOS, and desktop in development</p>
+      </div>
+      <div class="platform-grid">
+        <a href="https://web.nostrord.com/" target="_blank" class="platform-card platform-card-live">
+          <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4"/>
+            <line x1="21.17" y1="8" x2="12" y2="8"/>
+            <line x1="3.95" y1="6.06" x2="8.54" y2="14"/>
+            <line x1="10.88" y1="21.94" x2="15.46" y2="14"/>
+          </svg>
+          <h4>Web</h4>
+          <p>Open now</p>
+          <span class="live-badge">Live</span>
+        </a>
+        <div class="platform-card coming-soon">
+          <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          <h4>Android</h4>
+          <p>Play Store</p>
+          <span class="coming-soon-badge">Coming Soon</span>
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="build-from-source">Build from source ↗</a>
+        </div>
+        <div class="platform-card coming-soon">
+          <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+            <rect x="5" y="2" width="14" height="20" rx="2"/>
+            <line x1="12" y1="18" x2="12.01" y2="18"/>
+          </svg>
+          <h4>iOS</h4>
+          <p>App Store</p>
+          <span class="coming-soon-badge">Coming Soon</span>
+        </div>
+        <div class="platform-card coming-soon">
+          <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+          <h4>Desktop</h4>
+          <p>Win / Mac / Linux</p>
+          <span class="coming-soon-badge">Coming Soon</span>
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="build-from-source">Build from source ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Built With -->
+  <section class="built-with">
+    <div class="container">
+      <div class="built-with-header">
+        <h2>Built With</h2>
+      </div>
+      <div class="built-with-grid">
+        <div class="built-with-item">
+          <svg class="built-with-logo" viewBox="0 0 24 24" fill="#7F52FF"><path d="M24 24H0V0h24L12 12Z"/></svg>
+          <span class="built-with-name">Kotlin</span>
+          <span class="built-with-desc">WebAssembly</span>
+        </div>
+        <div class="built-with-item">
+          <svg class="built-with-logo" viewBox="0 0 24 24" fill="#4285F4"><path d="M12.135.003a2.577 2.577 0 0 0-1.42.344L2.55 5.06a2.577 2.577 0 0 0-.953.967l3.957 2.17a1.765 1.765 0 0 1 .603-.588l4.951-2.86a1.761 1.761 0 0 1 1.76 0l4.951 2.86a1.753 1.753 0 0 1 .526.46l3.921-2.265a2.577 2.577 0 0 0-.816-.744L13.291.347a2.577 2.577 0 0 0-1.152-.34Zm-.145 4.912a1.36 1.36 0 0 0-.68.182L6.36 7.953a1.345 1.345 0 0 0-.454.435l1.92 1.055a1.05 1.05 0 0 1 .31-.275l3.34-1.928a1.054 1.054 0 0 1 1.051 0l3.336 1.928a1.066 1.066 0 0 1 .238.199l.018-.01-.002-.002 1.877-1.08a1.353 1.353 0 0 0-.373-.322l-4.95-2.86a1.357 1.357 0 0 0-.68-.178Zm10.432 1.149-3.92 2.26a1.757 1.757 0 0 1 .2.812v5.715c0 .627-.332 1.21-.88 1.528l-4.95 2.86a1.761 1.761 0 0 1-.64.214v4.524a2.577 2.577 0 0 0 1.059-.313l8.162-4.713a2.577 2.577 0 0 0 1.289-2.23V7.297a2.577 2.577 0 0 0-.318-1.228Zm-20.937.238a2.577 2.577 0 0 0-.227.99v9.43c0 .918.491 1.767 1.293 2.229l8.162 4.713a2.57 2.57 0 0 0 1.225.336v-4.531a1.761 1.761 0 0 1-.833-.235L6.156 16.38a1.765 1.765 0 0 1-.877-1.528V9.136a1.776 1.776 0 0 1 .131-.676Zm16.67 2.223-1.89 1.092a1.058 1.058 0 0 1 .124.46v3.856c0 .378-.2.72-.526.907l-3.336 1.93a1.04 1.04 0 0 1-.295.107v2.17c.152-.027.304-.078.44-.157l4.949-2.859a1.36 1.36 0 0 0 .68-1.18V9.136a1.36 1.36 0 0 0-.147-.607Zm-12.387.13a1.36 1.36 0 0 0-.088.481v5.715a1.36 1.36 0 0 0 .68 1.18l4.95 2.86c.194.112.412.166.627.177v-2.174a1.054 1.054 0 0 1-.46-.123L8.14 14.843a1.054 1.054 0 0 1-.532-.908v-3.853a.99.99 0 0 1 .077-.38l-.034-.013z"/></svg>
+          <span class="built-with-name">Compose for Web</span>
+          <span class="built-with-desc">Declarative UI</span>
+        </div>
+        <div class="built-with-item">
+          <svg class="built-with-logo" viewBox="0 0 24 24" fill="#087CFA"><path d="M8 0 0 8l8 8V8h8zm8 8v8H8l8 8 8-8z"/></svg>
+          <span class="built-with-name">Ktor</span>
+          <span class="built-with-desc">WebSocket & HTTP</span>
+        </div>
+        <div class="built-with-item">
+          <svg class="built-with-logo" viewBox="0 0 256 256" fill="#662482"><path d="M210.8 199.4c0 3.1-2.5 5.7-5.7 5.7h-68c-3.1 0-5.7-2.5-5.7-5.7v-15.5c.3-19 2.3-37.2 6.5-45.5 2.5-5 6.7-7.7 11.5-9.1 9.1-2.7 24.9-.9 31.7-1.2 0 0 20.4.8 20.4-10.7s-9.1-8.6-9.1-8.6c-10 .3-17.7-.4-22.6-2.4-8.3-3.3-8.6-9.2-8.6-11.2-.4-23.1-34.5-25.9-64.5-20.1-32.8 6.2.4 53.3.4 116.1v8.4c0 3.1-2.6 5.6-5.7 5.6H57.7c-3.1 0-5.7-2.5-5.7-5.7v-144c0-3.1 2.5-5.7 5.7-5.7h31.7c3.1 0 5.7 2.5 5.7 5.7 0 4.7 5.2 7.2 9 4.5 11.4-8.2 26-12.5 42.4-12.5 36.6 0 64.4 21.4 64.4 68.7v83.2ZM150 99.3c0-6.7-5.4-12.1-12.1-12.1s-12.1 5.4-12.1 12.1 5.4 12.1 12.1 12.1S150 106 150 99.3Z"/></svg>
+          <span class="built-with-name">Nostr Protocol</span>
+          <span class="built-with-desc">Decentralized identity</span>
+        </div>
+      </div>
+      <div class="compatible-relays">
+        <span class="compatible-label">Compatible NIP-29 Relays</span>
+        <div class="relay-list">
+          <span class="relay-badge">wss://groups.fiatjaf.com</span>
+          <span class="relay-badge">wss://relay.groups.nip29.com</span>
+          <span class="relay-badge">wss://groups.0xchat.com</span>
+          <span class="relay-badge">wss://pyramid.fiatjaf.com</span>
+          <span class="relay-badge">+ any NIP-29 relay</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FAQ -->
+  <section class="faq" id="faq">
+    <div class="container">
+      <div class="faq-header">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What is NIP-29?</summary>
+          <p>NIP-29 is a Nostr specification for relay-managed groups. Each group lives on a relay and has a unique ID. The relay enforces membership, roles, and moderation. Admins can remove members or messages, and the relay rejects unauthorized events. Unlike Discord servers, no single company owns the infrastructure.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How is this different from Discord?</summary>
+          <p>Discord is centralized: one company controls your data and can ban you at any time. Nostrord uses Nostr: your account is a key you own, messages are signed and propagated through independent relays, and no single entity can censor or deplatform you.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I create an account?</summary>
+          <p>Your Nostr account is a cryptographic key you control. To sign up, generate a new key directly in the app. No email, no phone, no verification. Already have a Nostr account? Sign in with a browser extension (NIP-07), a remote signer (NIP-46), or paste your key directly.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Where are my keys stored?</summary>
+          <p>If you sign in with a local key, it is encrypted and stored in your browser's local storage and never leaves your device. For maximum security, use a NIP-46 remote signer (bunker): your private key stays on a dedicated signing device and the app only ever sees signed events.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What relays can I use?</summary>
+          <p>Any relay that supports NIP-29. Nostrord comes pre-configured with popular options like groups.fiatjaf.com, groups.0xchat.com, and relay.groups.nip29.com. You can add, remove, or self-host any NIP-29 relay at any time. Your groups follow the relay, not the app.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is Nostrord open source?</summary>
+          <p>Yes, fully open source. You can audit the code, build it yourself, or contribute on GitHub. No hidden telemetry, no analytics, no tracking.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why Kotlin and WebAssembly?</summary>
+          <p>Kotlin Multiplatform (KMP) lets us share business logic across web, Android, iOS, and desktop from a single codebase. For the web, Kotlin compiles to WebAssembly, delivering near-native performance in the browser with Compose's declarative UI, no JavaScript overhead, no web view hacks.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I use Nostrord with other Nostr clients?</summary>
+          <p>Yes. Since Nostrord uses standard Nostr events (NIP-29), your groups and messages are visible in any client that supports the same NIPs, like Flotilla, Chachi, or 0xChat.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community -->
+  <section class="community" id="community">
+    <div class="container">
+      <div class="community-header">
+        <h2>Join the community</h2>
+        <p>Nostrord is in active development. Join the conversation, report bugs, or just say hello.</p>
+      </div>
+      <div class="community-grid">
+        <a href="https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord" target="_blank" rel="noopener noreferrer" class="community-card community-card-highlight">
+          <div class="community-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <h3>Chat on Nostrord</h3>
+          <p>Join the official Nostrord group on groups.0xchat.com. Talk to the devs, share feedback, or just hang out.</p>
+          <span class="community-action">Join Group</span>
+        </a>
+        <a href="https://github.com/nostrord/nostrord/issues" target="_blank" rel="noopener noreferrer" class="community-card">
+          <div class="community-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
+          <h3>Report Issues</h3>
+          <p>Found a bug or have a feature request? Open an issue on GitHub. Every report helps improve the app.</p>
+          <span class="community-action">Open Issues</span>
+        </a>
+        <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="community-card">
+          <div class="community-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <polyline points="16 18 22 12 16 6"/>
+              <polyline points="8 6 2 12 8 18"/>
+            </svg>
+          </div>
+          <h3>Contribute Code</h3>
+          <p>Nostrord is 100% open source. Fork, build, submit PRs. Kotlin, Compose, and Nostr protocol contributions welcome.</p>
+          <span class="community-action">View Source</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container">
+      <div class="cta-box">
+        <h2>Your groups. Your rules.</h2>
+        <p>Create a Nostr account, pick a relay, and start building communities that no one can take from you. Open source, decentralized, sovereign.</p>
+        <div class="cta-buttons">
+          <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            Open Web App
+          </a>
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            Contribute on GitHub
+          </a>
+        </div>
+        <p class="cta-contribute">Contributions welcome: open issues, PRs, and feedback on <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-links">
+          <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://github.com/nostrord/nostrord/issues" target="_blank" rel="noopener noreferrer">Report Issue</a>
+          <a href="https://nostr.com" target="_blank" rel="noopener noreferrer">Nostr</a>
+          <a href="https://github.com/nostr-protocol/nips/blob/master/29.md" target="_blank" rel="noopener noreferrer">NIP-29</a>
+        </div>
+        <span class="footer-copy">Open source. Contributions welcome.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/theme.js"></script>
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileNav = document.getElementById('mobile-nav');
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      mobileNav.classList.toggle('active');
+      document.body.style.overflow = mobileNav.classList.contains('active') ? 'hidden' : '';
+    });
+    mobileNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  </script>
+</body>
+</html>
