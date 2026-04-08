@@ -1,0 +1,33 @@
+title: Nostrord
+description: "NIP-29 client for decentralized group chat on Nostr"
+url: "https://nostrord.com"
+baseurl: ""
+lang: en
+
+permalink: /blog/:title.html
+
+image: /assets/img/nostrord-app.png
+logo: /assets/img/nostrord.svg
+
+author:
+  name: The Nostrord Team
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+      image: /assets/img/nostrord-app.png
+
+include:
+  - .well-known
+
+exclude:
+  - vendor
+  - Gemfile
+  - Gemfile.lock
+  - Makefile

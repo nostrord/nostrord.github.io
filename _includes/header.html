@@ -1,0 +1,55 @@
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <img class="logo-mark" src="/assets/img/nostrord.svg" alt="Nostrord logo">
+        <span class="logo-text">NOSTRORD</span>
+      </a>
+      <div class="nav-actions">
+        <a href="{% if page.nav_home %}#why{% else %}/#why{% endif %}" class="nav-link">Why</a>
+        <a href="{% if page.nav_home %}#features{% else %}/#features{% endif %}" class="nav-link">Features</a>
+        <a href="{% if page.nav_home %}#platforms{% else %}/#platforms{% endif %}" class="nav-link">Platforms</a>
+        <a href="{% if page.nav_home %}blog/{% else %}/blog/{% endif %}" class="nav-link"{% if page.nav_blog_active %} aria-current="page"{% endif %}>Blog</a>
+        <a href="{% if page.nav_home %}#faq{% else %}/#faq{% endif %}" class="nav-link">FAQ</a>
+        <a href="{% if page.nav_home %}#community{% else %}/#community{% endif %}" class="nav-link">Community</a>
+        <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="nav-link">GitHub</a>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Open menu" title="Open menu">
+          <svg class="menu-icon icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+          <svg class="menu-icon icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <!-- Sun icon (light mode) -->
+          <svg class="theme-icon icon-light" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <!-- Moon icon (dark mode) -->
+          <svg class="theme-icon icon-dark" viewBox="0 0 24 24">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <!-- Monitor icon (system mode) -->
+          <svg class="theme-icon icon-system" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </button>
+        <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-launch">Launch App</a>
+      </div>
+    </div>
+  </div>
+</header>
