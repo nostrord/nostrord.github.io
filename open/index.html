@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nostrord - Join Group</title>
+
+<!-- OG meta tags for social sharing previews -->
+<meta property="og:site_name" content="Nostrord">
+<meta property="og:title" content="Join a group on Nostrord">
+<meta property="og:description" content="Nostrord is a simple, reliable, and private group messaging app powered by Nostr (NIP-29).">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nostrord.com">
+<meta property="og:image" content="https://nostrord.com/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Join a group on Nostrord">
+<meta name="twitter:description" content="Simple, reliable, and private group messaging powered by Nostr.">
+<meta name="twitter:image" content="https://nostrord.com/og-image.png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #1e1f22;
+    color: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    padding: 24px;
+  }
+  .card {
+    background: #2b2d31;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 420px;
+    width: 100%;
+    text-align: center;
+  }
+  .logo { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .subtitle { color: #949ba4; font-size: 14px; margin-bottom: 24px; }
+  .avatar-wrapper {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    position: relative;
+  }
+  .group-avatar {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  .avatar-fallback {
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .group-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .group-about { color: #b5bac1; font-size: 13px; margin-bottom: 4px; }
+  .group-meta { color: #949ba4; font-size: 12px; margin-bottom: 16px; }
+  .group-relay { color: #949ba4; font-size: 13px; margin-bottom: 24px; }
+  .info { color: #949ba4; font-size: 14px; margin-bottom: 20px; }
+  .btn {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    margin: 4px;
+  }
+  .btn-primary { background: #5865f2; color: #fff; }
+  .btn-primary:hover { background: #4752c4; }
+  .btn-secondary { background: #404249; color: #e0e0e0; }
+  .btn-secondary:hover { background: #4e5058; }
+  .buttons { margin-top: 16px; }
+  .hidden { display: none; }
+  .download-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #3a3b3e;
+  }
+  .download-text {
+    color: #949ba4;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .download-text a {
+    color: #5865f2;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .download-text a:hover { text-decoration: underline; }
+  .footer {
+    margin-top: 20px;
+    color: #6d6f78;
+    font-size: 11px;
+  }
+  .footer a { color: #6d6f78; text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* Responsive — small screens */
+  @media (max-width: 480px) {
+    body { padding: 12px; }
+    .card { padding: 20px 16px; }
+    .logo { font-size: 24px; margin-bottom: 4px; }
+    .subtitle { margin-bottom: 16px; }
+    .info { margin-bottom: 12px; }
+    .download-section { margin-top: 16px; padding-top: 14px; }
+    .footer { margin-top: 12px; }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      margin: 0;
+      padding: 12px 24px;
+    }
+  }
+
+  /* Very small screens (older/budget phones) */
+  @media (max-width: 320px) {
+    body { padding: 8px; }
+    .card { padding: 16px 12px; }
+    .logo { font-size: 22px; }
+    .subtitle { font-size: 12px; }
+    .group-name { font-size: 16px; }
+    .btn { font-size: 13px; padding: 10px 16px; }
+  }
+
+  /* Word break for long group names/descriptions */
+  .group-name, .group-about, .group-relay {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Nostrord</div>
+  <div class="subtitle">NIP-29 Group Messaging</div>
+
+  <div id="group-loading" class="hidden">
+    <div class="spinner"></div>
+    <div class="info">Loading group info...</div>
+  </div>
+
+  <div id="group-info" class="hidden">
+    <div class="avatar-wrapper" id="avatar-wrapper">
+      <div class="avatar-fallback" id="avatar-fallback"></div>
+      <img id="group-avatar" class="group-avatar" alt="">
+    </div>
+    <div class="group-name" id="display-group"></div>
+    <div class="group-about hidden" id="display-about"></div>
+    <div class="group-relay" id="display-relay"></div>
+  </div>
+
+  <div id="content" class="hidden">
+    <div class="info">You've been invited to join this group on Nostrord.</div>
+    <div class="buttons">
+      <a id="btn-app" class="btn btn-primary" href="#">Open in Nostrord</a>
+      <a id="btn-web" class="btn btn-secondary" href="#">Continue in Browser</a>
+    </div>
+    <div class="download-section">
+      <div class="download-text">Don't have the app yet? <a href="https://nostrord.com">Download Nostrord</a></div>
+    </div>
+    <div class="footer">
+      <a href="https://nostrord.com">nostrord.com</a> &middot; NIP-29 Group Messaging
+    </div>
+  </div>
+
+  <div id="error" class="hidden">
+    <div class="info">Missing relay parameter.</div>
+  </div>
+</div>
+
+<script>
+// Runs immediately — no module import delay.
+// nostr-tools is lazy-loaded only if AUTH is required.
+
+var params = new URLSearchParams(window.location.search);
+var relay = params.get('relay') || '';
+var group = params.get('group') || '';
+var code = params.get('code') || '';
+
+if (!relay) {
+  document.getElementById('content').classList.add('hidden');
+  document.getElementById('error').classList.remove('hidden');
+} else {
+  // Build URLs
+  var webParams = new URLSearchParams();
+  webParams.set('relay', relay);
+  if (group) webParams.set('group', group);
+  if (code) webParams.set('code', code);
+
+  var appUrl = 'nostrord://open?' + webParams;
+  document.getElementById('btn-app').href = appUrl;
+  document.getElementById('btn-web').href = 'https://web.nostrord.com/?' + webParams;
+
+  // Avatar helpers
+  function hashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }
+
+  var avatarColors = ['#5865f2','#57f287','#fee75c','#eb459e','#ed4245','#f47b67','#9b59b6','#1abc9c','#e67e22','#3498db'];
+
+  function setFallbackAvatar(name, id) {
+    var fallback = document.getElementById('avatar-fallback');
+    fallback.style.backgroundColor = avatarColors[hashCode(id || name) % avatarColors.length];
+    var words = name.trim().split(/\s+/);
+    fallback.textContent = words.length >= 2
+      ? (words[0][0] + words[1][0]).toUpperCase()
+      : name.substring(0, 2).toUpperCase();
+  }
+
+  function showGroupInfo() {
+    document.getElementById('group-loading').classList.add('hidden');
+    document.getElementById('group-info').classList.remove('hidden');
+    document.getElementById('content').classList.remove('hidden');
+  }
+
+  // Ephemeral private key — generated instantly, no imports needed
+  var sk = crypto.getRandomValues(new Uint8Array(32));
+
+  // Lazy-load only @noble/curves (much smaller than nostr-tools) when AUTH is needed
+  var cryptoReady = null;
+  function loadCrypto() {
+    if (cryptoReady) return cryptoReady;
+    cryptoReady = Promise.all([
+      import('https://esm.sh/@noble/curves@1.8.1/secp256k1'),
+      import('https://esm.sh/@noble/hashes@1.7.1/sha256'),
+      import('https://esm.sh/@noble/hashes@1.7.1/utils')
+    ]).then(function(mods) {
+      var schnorr = mods[0].schnorr;
+      var sha256 = mods[1].sha256;
+      var bytesToHex = mods[2].bytesToHex;
+      var pubkey = bytesToHex(schnorr.getPublicKey(sk));
+
+      return {
+        signAuthEvent: function(challenge, relayUrl) {
+          var event = {
+            kind: 22242,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: [['relay', relayUrl], ['challenge', challenge]],
+            content: '',
+            pubkey: pubkey
+          };
+          // NIP-01: event id = sha256(JSON.stringify([0, pubkey, created_at, kind, tags, content]))
+          var serialized = JSON.stringify([0, event.pubkey, event.created_at, event.kind, event.tags, event.content]);
+          var id = bytesToHex(sha256(new TextEncoder().encode(serialized)));
+          var sig = bytesToHex(schnorr.sign(id, sk));
+          event.id = id;
+          event.sig = sig;
+          return event;
+        }
+      };
+    });
+    return cryptoReady;
+  }
+
+  function requestMeta(ws, groupId) {
+    ws.send(JSON.stringify(['REQ', 'meta', { kinds: [39000], '#d': [groupId], limit: 1 }]));
+  }
+
+  // Fetch group metadata
+  if (group) {
+    document.getElementById('group-loading').classList.remove('hidden');
+    document.getElementById('display-group').textContent = group;
+    document.getElementById('display-relay').textContent = relay;
+    setFallbackAvatar(group, group);
+
+    var revealed = false;
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      showGroupInfo();
+      // Try to open the app after showing group info
+      window.location.href = appUrl;
+    }
+
+    var relayWss = relay.includes('://') ? relay : 'wss://' + relay;
+    var authenticated = false;
+
+    try {
+      var ws = new WebSocket(relayWss);
+      var timeout = setTimeout(function() { reveal(); try { ws.close(); } catch(_){} }, 5000);
+
+      ws.onopen = function() {
+        // Send REQ immediately (optimistic — most relays don't require auth for metadata)
+        requestMeta(ws, group);
+      };
+
+      ws.onmessage = function(e) {
+        try {
+          var msg = JSON.parse(e.data);
+
+          // NIP-42 AUTH challenge — lazy-load crypto, sign, respond
+          if (msg[0] === 'AUTH' && msg[1]) {
+            var challenge = msg[1];
+            loadCrypto().then(function(crypto) {
+              var authEvent = crypto.signAuthEvent(challenge, relayWss);
+              ws.send(JSON.stringify(['AUTH', authEvent]));
+            });
+            return;
+          }
+
+          // AUTH accepted — re-request metadata
+          if (msg[0] === 'OK' && msg[2] === true && !authenticated) {
+            authenticated = true;
+            requestMeta(ws, group);
+            return;
+          }
+
+          // CLOSED with auth-required — relay rejected REQ before auth, will re-request after OK
+          if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('auth-required')) {
+            return;
+          }
+
+          // CLOSED with restricted — private group
+          if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('restricted')) {
+            document.getElementById('display-group').textContent = 'Private Group';
+            setFallbackAvatar('Private Group', group);
+            clearTimeout(timeout);
+            reveal();
+            ws.close();
+            return;
+          }
+
+          if (msg[0] === 'EVENT' && msg[2]) {
+            var tags = msg[2].tags || [];
+            var name = '', picture = '', about = '';
+
+            for (var i = 0; i < tags.length; i++) {
+              var t = tags[i];
+              if (t[0] === 'name' && t[1]) name = t[1];
+              if (t[0] === 'picture' && t[1]) picture = t[1];
+              if (t[0] === 'about' && t[1]) about = t[1];
+            }
+
+            if (name) {
+              document.getElementById('display-group').textContent = name;
+              document.title = 'Join ' + name + ' on Nostrord';
+              setFallbackAvatar(name, group);
+              var ogTitle = document.querySelector('meta[property="og:title"]');
+              if (ogTitle) ogTitle.content = 'Join ' + name + ' on Nostrord';
+            }
+
+            if (picture) {
+              var avatar = document.getElementById('group-avatar');
+              avatar.onload = function() {
+                document.getElementById('avatar-fallback').style.display = 'none';
+                avatar.style.display = 'block';
+                reveal();
+              };
+              avatar.onerror = function() { reveal(); };
+              avatar.src = picture;
+            }
+
+            if (about) {
+              var firstParagraph = about.split(/\n\s*\n/)[0].trim();
+              var truncated = firstParagraph.length > 140
+                ? firstParagraph.substring(0, 140).trimEnd() + '...'
+                : firstParagraph;
+              var aboutEl = document.getElementById('display-about');
+              aboutEl.textContent = truncated;
+              aboutEl.classList.remove('hidden');
+              var ogDesc = document.querySelector('meta[property="og:description"]');
+              if (ogDesc) ogDesc.content = truncated;
+            }
+
+            clearTimeout(timeout);
+            if (!picture) reveal();
+            ws.close();
+          } else if (msg[0] === 'EOSE') {
+            clearTimeout(timeout);
+            reveal();
+            ws.close();
+          }
+        } catch (_) { reveal(); }
+      };
+
+      ws.onerror = function() { clearTimeout(timeout); reveal(); };
+    } catch (_) { reveal(); }
+  } else {
+    // Relay-only URL — fetch NIP-11 relay metadata
+    document.getElementById('group-loading').classList.remove('hidden');
+    document.getElementById('display-group').textContent = relay;
+    document.getElementById('display-relay').textContent = '';
+    setFallbackAvatar(relay, relay);
+
+    // Fallback icons for relays without icon in NIP-11
+    var relayIcons = {
+      'groups.0xchat.com': '/assets/img/relay_0xchat.png',
+      'relay.groups.nip29.com': '/assets/img/relay_nip29.png'
+    };
+
+    var relayHost = relay.replace(/^wss?:\/\//, '').replace(/\/+$/, '');
+    var nip11Url = 'https://' + relayHost;
+
+    fetch(nip11Url, { headers: { 'Accept': 'application/nostr+json' } })
+      .then(function(r) { return r.json(); })
+      .then(function(info) {
+        if (info.name) {
+          document.getElementById('display-group').textContent = info.name;
+          document.title = info.name + ' on Nostrord';
+        }
+        if (info.description) {
+          var desc = info.description.split(/\n\s*\n/)[0].trim();
+          var truncated = desc.length > 140 ? desc.substring(0, 140).trimEnd() + '...' : desc;
+          var aboutEl = document.getElementById('display-about');
+          aboutEl.textContent = truncated;
+          aboutEl.classList.remove('hidden');
+        }
+        var icon = info.icon || relayIcons[relayHost];
+        if (icon) {
+          var avatar = document.getElementById('group-avatar');
+          avatar.onload = function() {
+            document.getElementById('avatar-fallback').style.display = 'none';
+            avatar.style.display = 'block';
+          };
+          avatar.src = icon;
+        }
+      })
+      .catch(function() {
+        // NIP-11 failed — try fallback icon
+        var fallbackIcon = relayIcons[relayHost];
+        if (fallbackIcon) {
+          var avatar = document.getElementById('group-avatar');
+          avatar.onload = function() {
+            document.getElementById('avatar-fallback').style.display = 'none';
+            avatar.style.display = 'block';
+          };
+          avatar.src = fallbackIcon;
+        }
+      })
+      .finally(function() {
+        showGroupInfo();
+        window.location.href = appUrl;
+      });
+  }
+}
+</script>
+</body>
+</html>
