@@ -398,6 +398,7 @@ if (!relay) {
     } catch (_) { reveal(); }
   } else {
     // Relay-only URL — fetch NIP-11 relay metadata
+    document.querySelector('.info').textContent = 'Open this relay on Nostrord.';
     document.getElementById('group-loading').classList.remove('hidden');
     document.getElementById('display-group').textContent = relay;
     document.getElementById('display-relay').textContent = '';
