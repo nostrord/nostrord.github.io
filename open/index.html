@@ -166,7 +166,7 @@
   </div>
 
   <div id="content" class="hidden">
-    <div class="info">You've been invited to join this group on Nostrord.</div>
+    <div class="info" id="invite-text">You've been invited to join this group on Nostrord.</div>
     <div class="buttons">
       <a id="btn-app" class="btn btn-primary" href="#">Open in Nostrord</a>
       <a id="btn-web" class="btn btn-secondary" href="#">Continue in Browser</a>
@@ -397,7 +397,8 @@ if (!relay) {
     } catch (_) { reveal(); }
   } else {
     // Relay-only URL — fetch NIP-11 relay metadata
-    document.querySelector('.info').textContent = 'Open this relay on Nostrord.';
+    document.getElementById('invite-text').textContent = 'Open this relay on Nostrord.';
+    document.getElementById('group-loading').querySelector('.info').textContent = 'Loading relay info...';
     document.getElementById('group-loading').classList.remove('hidden');
     document.getElementById('display-group').textContent = relay;
     document.getElementById('display-relay').textContent = '';
