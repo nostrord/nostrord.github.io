@@ -233,6 +233,26 @@ if (!relay) {
     document.getElementById('content').classList.remove('hidden');
   }
 
+  // Cache helpers (localStorage with 24h TTL)
+  var CACHE_TTL = 86400000; // 24 hours
+  function cacheKey(type, id) { return 'nostrord_' + type + '_' + id; }
+  function getCache(type, id) {
+    try {
+      var raw = localStorage.getItem(cacheKey(type, id));
+      if (!raw) return null;
+      var entry = JSON.parse(raw);
+      if (Date.now() - entry.ts > CACHE_TTL) {
+        localStorage.removeItem(cacheKey(type, id));
+        return null;
+      }
+      return entry.data;
+    } catch (_) { return null; }
+  }
+  function setCache(type, id, data) {
+    try { localStorage.setItem(cacheKey(type, id), JSON.stringify({ ts: Date.now(), data: data })); }
+    catch (_) {}
+  }
+
   // Ephemeral private key — generated instantly, no imports needed
   var sk = crypto.getRandomValues(new Uint8Array(32));
 
@@ -288,113 +308,117 @@ if (!relay) {
       if (revealed) return;
       revealed = true;
       showGroupInfo();
-      // Try to open the app after showing group info
       window.location.href = appUrl;
     }
 
-    var relayWss = relay.includes('://') ? relay : 'wss://' + relay;
-    var authenticated = false;
+    function applyGroupData(data) {
+      if (data.name) {
+        document.getElementById('display-group').textContent = data.name;
+        document.title = 'Join ' + data.name + ' on Nostrord';
+        setFallbackAvatar(data.name, group);
+        var ogTitle = document.querySelector('meta[property="og:title"]');
+        if (ogTitle) ogTitle.content = 'Join ' + data.name + ' on Nostrord';
+      }
+      if (data.picture) {
+        var avatar = document.getElementById('group-avatar');
+        avatar.onload = function() {
+          document.getElementById('avatar-fallback').style.display = 'none';
+          avatar.style.display = 'block';
+          reveal();
+        };
+        avatar.onerror = function() { reveal(); };
+        avatar.src = data.picture;
+      }
+      if (data.about) {
+        var firstParagraph = data.about.split(/\n\s*\n/)[0].trim();
+        var truncated = firstParagraph.length > 140
+          ? firstParagraph.substring(0, 140).trimEnd() + '...'
+          : firstParagraph;
+        var aboutEl = document.getElementById('display-about');
+        aboutEl.textContent = truncated;
+        aboutEl.classList.remove('hidden');
+        var ogDesc = document.querySelector('meta[property="og:description"]');
+        if (ogDesc) ogDesc.content = truncated;
+      }
+    }
 
-    try {
-      var ws = new WebSocket(relayWss);
-      var timeout = setTimeout(function() { reveal(); try { ws.close(); } catch(_){} }, 5000);
+    var cached = getCache('group', relay + '_' + group);
+    if (cached) {
+      applyGroupData(cached);
+      if (!cached.picture) reveal();
+    } else {
+      var relayWss = relay.includes('://') ? relay : 'wss://' + relay;
+      var authenticated = false;
 
-      ws.onopen = function() {
-        // Send REQ immediately (optimistic — most relays don't require auth for metadata)
-        requestMeta(ws, group);
-      };
+      try {
+        var ws = new WebSocket(relayWss);
+        var timeout = setTimeout(function() { reveal(); try { ws.close(); } catch(_){} }, 5000);
 
-      ws.onmessage = function(e) {
-        try {
-          var msg = JSON.parse(e.data);
+        ws.onopen = function() {
+          requestMeta(ws, group);
+        };
 
-          // NIP-42 AUTH challenge — lazy-load crypto, sign, respond
-          if (msg[0] === 'AUTH' && msg[1]) {
-            var challenge = msg[1];
-            loadCrypto().then(function(crypto) {
-              var authEvent = crypto.signAuthEvent(challenge, relayWss);
-              ws.send(JSON.stringify(['AUTH', authEvent]));
-            });
-            return;
-          }
+        ws.onmessage = function(e) {
+          try {
+            var msg = JSON.parse(e.data);
 
-          // AUTH accepted — re-request metadata
-          if (msg[0] === 'OK' && msg[2] === true && !authenticated) {
-            authenticated = true;
-            requestMeta(ws, group);
-            return;
-          }
-
-          // CLOSED with auth-required — relay rejected REQ before auth, will re-request after OK
-          if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('auth-required')) {
-            return;
-          }
-
-          // CLOSED with restricted — private group
-          if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('restricted')) {
-            document.getElementById('display-group').textContent = 'Private Group';
-            setFallbackAvatar('Private Group', group);
-            clearTimeout(timeout);
-            reveal();
-            ws.close();
-            return;
-          }
-
-          if (msg[0] === 'EVENT' && msg[2]) {
-            var tags = msg[2].tags || [];
-            var name = '', picture = '', about = '';
-
-            for (var i = 0; i < tags.length; i++) {
-              var t = tags[i];
-              if (t[0] === 'name' && t[1]) name = t[1];
-              if (t[0] === 'picture' && t[1]) picture = t[1];
-              if (t[0] === 'about' && t[1]) about = t[1];
+            if (msg[0] === 'AUTH' && msg[1]) {
+              var challenge = msg[1];
+              loadCrypto().then(function(crypto) {
+                var authEvent = crypto.signAuthEvent(challenge, relayWss);
+                ws.send(JSON.stringify(['AUTH', authEvent]));
+              });
+              return;
             }
 
-            if (name) {
-              document.getElementById('display-group').textContent = name;
-              document.title = 'Join ' + name + ' on Nostrord';
-              setFallbackAvatar(name, group);
-              var ogTitle = document.querySelector('meta[property="og:title"]');
-              if (ogTitle) ogTitle.content = 'Join ' + name + ' on Nostrord';
+            if (msg[0] === 'OK' && msg[2] === true && !authenticated) {
+              authenticated = true;
+              requestMeta(ws, group);
+              return;
             }
 
-            if (picture) {
-              var avatar = document.getElementById('group-avatar');
-              avatar.onload = function() {
-                document.getElementById('avatar-fallback').style.display = 'none';
-                avatar.style.display = 'block';
-                reveal();
-              };
-              avatar.onerror = function() { reveal(); };
-              avatar.src = picture;
+            if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('auth-required')) {
+              return;
             }
 
-            if (about) {
-              var firstParagraph = about.split(/\n\s*\n/)[0].trim();
-              var truncated = firstParagraph.length > 140
-                ? firstParagraph.substring(0, 140).trimEnd() + '...'
-                : firstParagraph;
-              var aboutEl = document.getElementById('display-about');
-              aboutEl.textContent = truncated;
-              aboutEl.classList.remove('hidden');
-              var ogDesc = document.querySelector('meta[property="og:description"]');
-              if (ogDesc) ogDesc.content = truncated;
+            if (msg[0] === 'CLOSED' && typeof msg[2] === 'string' && msg[2].includes('restricted')) {
+              document.getElementById('display-group').textContent = 'Private Group';
+              setFallbackAvatar('Private Group', group);
+              clearTimeout(timeout);
+              reveal();
+              ws.close();
+              return;
             }
 
-            clearTimeout(timeout);
-            if (!picture) reveal();
-            ws.close();
-          } else if (msg[0] === 'EOSE') {
-            clearTimeout(timeout);
-            reveal();
-            ws.close();
-          }
-        } catch (_) { reveal(); }
-      };
+            if (msg[0] === 'EVENT' && msg[2]) {
+              var tags = msg[2].tags || [];
+              var name = '', picture = '', about = '';
 
-      ws.onerror = function() { clearTimeout(timeout); reveal(); };
-    } catch (_) { reveal(); }
+              for (var i = 0; i < tags.length; i++) {
+                var t = tags[i];
+                if (t[0] === 'name' && t[1]) name = t[1];
+                if (t[0] === 'picture' && t[1]) picture = t[1];
+                if (t[0] === 'about' && t[1]) about = t[1];
+              }
+
+              var data = { name: name, picture: picture, about: about };
+              setCache('group', relay + '_' + group, data);
+              applyGroupData(data);
+
+              clearTimeout(timeout);
+              if (!picture) reveal();
+              ws.close();
+            } else if (msg[0] === 'EOSE') {
+              clearTimeout(timeout);
+              reveal();
+              ws.close();
+            }
+          } catch (_) { reveal(); }
+        };
+
+        ws.onerror = function() { clearTimeout(timeout); reveal(); };
+      } catch (_) { reveal(); }
+    }
   } else {
     // Relay-only URL — fetch NIP-11 relay metadata
     document.getElementById('invite-text').textContent = 'Open this relay on Nostrord.';
@@ -411,48 +435,61 @@ if (!relay) {
     };
 
     var relayHost = relay.replace(/^wss?:\/\//, '').replace(/\/+$/, '');
-    var nip11Url = 'https://' + relayHost;
 
-    fetch(nip11Url, { headers: { 'Accept': 'application/nostr+json' } })
-      .then(function(r) { return r.json(); })
-      .then(function(info) {
-        if (info.name) {
-          document.getElementById('display-group').textContent = info.name;
-          document.title = info.name + ' on Nostrord';
-        }
-        if (info.description) {
-          var desc = info.description.split(/\n\s*\n/)[0].trim();
-          var truncated = desc.length > 140 ? desc.substring(0, 140).trimEnd() + '...' : desc;
-          var aboutEl = document.getElementById('display-about');
-          aboutEl.textContent = truncated;
-          aboutEl.classList.remove('hidden');
-        }
-        var icon = info.icon || relayIcons[relayHost];
-        if (icon) {
-          var avatar = document.getElementById('group-avatar');
-          avatar.onload = function() {
-            document.getElementById('avatar-fallback').style.display = 'none';
-            avatar.style.display = 'block';
-          };
-          avatar.src = icon;
-        }
-      })
-      .catch(function() {
-        // NIP-11 failed — try fallback icon
-        var fallbackIcon = relayIcons[relayHost];
-        if (fallbackIcon) {
-          var avatar = document.getElementById('group-avatar');
-          avatar.onload = function() {
-            document.getElementById('avatar-fallback').style.display = 'none';
-            avatar.style.display = 'block';
-          };
-          avatar.src = fallbackIcon;
-        }
-      })
-      .finally(function() {
-        showGroupInfo();
-        window.location.href = appUrl;
-      });
+    function applyRelayData(data) {
+      if (data.name) {
+        document.getElementById('display-group').textContent = data.name;
+        document.title = data.name + ' on Nostrord';
+      }
+      if (data.description) {
+        var desc = data.description.split(/\n\s*\n/)[0].trim();
+        var truncated = desc.length > 140 ? desc.substring(0, 140).trimEnd() + '...' : desc;
+        var aboutEl = document.getElementById('display-about');
+        aboutEl.textContent = truncated;
+        aboutEl.classList.remove('hidden');
+      }
+      var icon = data.icon || relayIcons[relayHost];
+      if (icon) {
+        var avatar = document.getElementById('group-avatar');
+        avatar.onload = function() {
+          document.getElementById('avatar-fallback').style.display = 'none';
+          avatar.style.display = 'block';
+        };
+        avatar.src = icon;
+      }
+    }
+
+    var cachedRelay = getCache('relay', relayHost);
+    if (cachedRelay) {
+      applyRelayData(cachedRelay);
+      showGroupInfo();
+      window.location.href = appUrl;
+    } else {
+      var nip11Url = 'https://' + relayHost;
+
+      fetch(nip11Url, { headers: { 'Accept': 'application/nostr+json' } })
+        .then(function(r) { return r.json(); })
+        .then(function(info) {
+          var data = { name: info.name, description: info.description, icon: info.icon };
+          setCache('relay', relayHost, data);
+          applyRelayData(data);
+        })
+        .catch(function() {
+          var fallbackIcon = relayIcons[relayHost];
+          if (fallbackIcon) {
+            var avatar = document.getElementById('group-avatar');
+            avatar.onload = function() {
+              document.getElementById('avatar-fallback').style.display = 'none';
+              avatar.style.display = 'block';
+            };
+            avatar.src = fallbackIcon;
+          }
+        })
+        .finally(function() {
+          showGroupInfo();
+          window.location.href = appUrl;
+        });
+    }
   }
 }
 </script>
