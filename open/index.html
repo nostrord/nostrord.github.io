@@ -194,8 +194,7 @@ var group = params.get('group') || '';
 var code = params.get('code') || '';
 
 if (!relay) {
-  document.getElementById('content').classList.add('hidden');
-  document.getElementById('error').classList.remove('hidden');
+  window.location.href = '/';
 } else {
   // Build URLs
   var webParams = new URLSearchParams();
