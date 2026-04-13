@@ -1,4 +1,44 @@
+# Robots.txt for nostrord.com
+# Nostrord - NIP-29 Client for Decentralized Group Chat on Nostr
+
 User-agent: *
 Allow: /
 
+# Sitemap
 Sitemap: https://nostrord.com/sitemap.xml
+
+# LLM Context Files (see https://llmstxt.org)
+# llms.txt - Concise overview for AI assistants
+# llms-full.txt - Comprehensive documentation for detailed queries
+
+# Major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+# AI Assistants (allowed - we provide llms.txt for context)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /

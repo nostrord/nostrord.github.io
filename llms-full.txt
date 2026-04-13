@@ -1,0 +1,177 @@
+# Nostrord - Full Context
+
+> Nostrord is a free, open-source NIP-29 client for decentralized group chat on Nostr. Built with Kotlin Multiplatform (KMP) and Compose, it brings a Discord-style experience to a censorship-resistant protocol, with relay-enforced moderation, cryptographic identity, and no sign-up required.
+
+## What is Nostrord?
+
+Nostrord is a cross-platform group messaging application built on top of Nostr (Notes and Other Stuff Transmitted by Relays) and implements NIP-29, the Nostr Improvement Proposal that defines relay-based groups.
+
+Unlike centralized platforms like Discord, Telegram, or Slack where a company controls the servers and can ban users, delete communities, or shut down, Nostrord groups live on public Nostr relays that anyone can run. Membership, moderation, and access control are enforced by the relay hosting the group, and users can switch relays without losing their identity.
+
+## What is NIP-29?
+
+NIP-29 is the Nostr specification for relay-based groups. It defines:
+
+- Group creation and metadata (name, description, picture)
+- Member management (add, remove, list)
+- Admin roles and permissions (promote, demote, moderate)
+- Message posting and threading
+- Group discovery and invites
+- Relay-side authorization (the relay decides who can post)
+
+This differs from IRC-style channels because groups have persistent state, moderation tools, and cryptographic identity. It differs from Matrix or federated chat because there is no federation protocol - each group lives on a single relay.
+
+## Key Features
+
+### Core Messaging
+
+- Real-time chat via WebSocket subscriptions to Nostr relays
+- Threaded replies (reply-to relationship via NIP-10-style tags)
+- Rich text with link previews, emoji, and mentions
+- Image and file embedding via NIP-94 / NIP-96
+- Message deletion (by author or admin) per NIP-09
+
+### Moderation and Permissions
+
+- Admin roles with promote/demote capabilities
+- Per-member permissions (post, moderate, invite)
+- Relay-enforced membership (the relay rejects unauthorized events)
+- Message removal by admins
+- Member kick and ban
+
+### Identity and Signing
+
+- Nostr keypair identity (no email, phone, or username)
+- NIP-07 browser extension support for web signing
+- NIP-46 remote signer (bunker) for hardware-like separation of keys
+- NIP-19 bech32 encoding (npub, nsec, note, nevent, naddr)
+- NIP-42 relay authentication
+
+### Privacy
+
+- NIP-04 encrypted direct messages (legacy)
+- NIP-44 versioned encryption (current standard)
+- No analytics, no telemetry
+- No account server, no data harvesting
+
+### Multi-Platform
+
+- Web: runs in any modern browser via JS or WebAssembly target
+- Desktop: JVM native apps for Windows, macOS, Linux
+- Android: native Kotlin app via Compose Multiplatform
+- iOS: Compose Multiplatform UI (in development)
+
+## How It Works
+
+1. The user opens Nostrord on any platform
+2. The user authenticates with a Nostr keypair (existing or generated) or connects via NIP-07 (browser extension) or NIP-46 (remote signer)
+3. The user connects to one or more NIP-29-compatible relays (e.g., groups.0xchat.com)
+4. The user can create a new group, browse public groups, or accept an invite
+5. When sending a message, the client constructs a Nostr event, signs it with the private key, and publishes it to the group's relay
+6. The relay validates membership and permissions, then broadcasts to all subscribed members
+7. Other clients receive the event in real time and render it in the group chat
+
+## Architecture
+
+Nostrord uses Kotlin Multiplatform (KMP) with Compose Multiplatform for UI, sharing the majority of code across all target platforms.
+
+### Module Map
+
+- `composeApp/commonMain`: shared UI, business logic, NIP implementations
+- `composeApp/androidMain`: Android-specific storage and crypto
+- `composeApp/jvmMain`: JVM Desktop crypto (secp256k1-kmp), JVM Preferences
+- `composeApp/jsMain`: NIP-07 window.nostr, JS Ktor client
+- `composeApp/wasmJsMain`: WebAssembly target
+
+### Core Components
+
+- `NostrRepository`: public facade for group/message operations
+- `SessionManager`: authentication and NIP-42 handling
+- `AuthManager`: low-level key and signer management
+- `GroupManager`: NIP-29 group logic
+- `ConnectionManager`: WebSocket lifecycle across relays
+- `AppModule`: dependency injection entry point
+
+### Key Dependencies
+
+- Ktor 3.0 for WebSocket and HTTP
+- secp256k1-kmp 0.14 for elliptic curve cryptography (Android + JVM)
+- BouncyCastle 1.78 for auxiliary crypto
+- kotlinx.serialization for JSON parsing
+- Coil 3.x for image loading
+- EncryptedSharedPreferences for Android key storage
+
+## Supported NIPs
+
+| NIP | Description | Status |
+|-----|-------------|--------|
+| NIP-01 | Basic protocol (events, subscriptions) | Implemented |
+| NIP-04 | Encrypted direct messages | Implemented |
+| NIP-07 | Browser signer extension | Implemented (web) |
+| NIP-09 | Event deletion | Implemented |
+| NIP-19 | bech32 entities | Implemented |
+| NIP-29 | Relay-based groups | Core focus |
+| NIP-42 | Relay authentication | Implemented |
+| NIP-44 | Versioned encryption | Implemented |
+| NIP-46 | Remote signer (bunker) | Implemented |
+| NIP-65 | Relay list metadata | Implemented |
+
+## Why Nostrord?
+
+### vs Centralized Platforms (Discord, Telegram)
+
+- No company can ban you, delete your community, or shut down
+- Your identity is a cryptographic key, portable across all Nostr apps
+- Anyone can run a relay to host a group
+- Moderation is transparent and user-controlled
+- No phone number, email, or personal data required
+
+### vs Federated Platforms (Matrix, Mastodon)
+
+- Simpler protocol (no federation complexity)
+- Lightweight clients (no homeserver required)
+- Faster message delivery (direct WebSocket to relay)
+- Unified identity across all apps (not scoped to a server)
+
+### vs Other Nostr Clients
+
+- Purpose-built for NIP-29 groups, not general Nostr
+- Kotlin Multiplatform (true native, not Electron)
+- Compose UI for consistent feel across platforms
+- Open source under the Unlicense (public domain)
+
+## Platform Support
+
+- Web: https://web.nostrord.com/ (live beta)
+- Android: native APK, planned Google Play listing
+- Desktop: Windows, macOS, Linux via JVM
+- iOS: native via Compose Multiplatform (in development)
+
+## Funding
+
+Nostrord has been awarded a grant by OpenSats in their sixteenth wave of Nostr grants (April 2026). This funding enables focused development toward a stable v1 release.
+
+Announcement: https://opensats.org/blog/sixteenth-wave-of-nostr-grants
+Blog post: https://nostrord.com/blog/nostrord-opensats-grant.html
+
+## Source Code and License
+
+Nostrord is released under the Unlicense (public domain):
+https://github.com/nostrord/nostrord/blob/main/LICENSE
+
+Source: https://github.com/nostrord/nostrord
+
+Contributions, bug reports, and PRs are welcome.
+
+## Links
+
+- Website: https://nostrord.com
+- Web app: https://web.nostrord.com/
+- GitHub: https://github.com/nostrord/nostrord
+- Blog: https://nostrord.com/blog/
+- Join the Nostrord group: https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord
+- OpenSats grant post: https://nostrord.com/blog/nostrord-opensats-grant.html
+
+## Contact
+
+Developer: Anderson Juhasc

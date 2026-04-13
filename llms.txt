@@ -1,0 +1,81 @@
+# Nostrord
+
+> Nostrord is a free, open-source NIP-29 client for decentralized group chat on Nostr. It brings a Discord-style experience to a censorship-resistant protocol, with relay-enforced moderation, cryptographic identity, and no sign-up required.
+
+## What is Nostrord?
+
+Nostrord is a Kotlin Multiplatform (KMP) group messaging client built on NIP-29, the Nostr specification for relay-based groups. Users create or join groups hosted on any NIP-29-compatible relay, with membership, moderation, and permissions enforced by the relay itself rather than a central server.
+
+Your account is a cryptographic keypair you own. There is no phone number, email, or username tied to a central service. The same identity works across every Nostr app.
+
+## Key Features
+
+- NIP-29 relay-based groups (create, join, manage)
+- Chat, replies, and threaded conversations
+- Moderation: admin roles, member management, message deletion
+- Relay-enforced membership and permissions
+- Multi-platform: Android, iOS, Desktop (JVM), Web (JS and WebAssembly)
+- Cryptographic identity via Nostr keys (no sign-up)
+- NIP-07 browser extension support for signing
+- NIP-46 remote signer (bunker) support
+- Open source under the Unlicense
+
+## How It Works
+
+1. User opens Nostrord (web, desktop, or mobile) and authenticates with a Nostr keypair
+2. User connects to one or more NIP-29-compatible relays
+3. User creates a new group on a relay or joins an existing one via invite
+4. The relay enforces who can join, post, and moderate
+5. Messages are signed with the user's private key and published to the relay
+6. Other members receive messages in real time via WebSocket subscriptions
+
+## Architecture
+
+Nostrord is built with Kotlin Multiplatform and Compose Multiplatform. Shared business logic in commonMain runs on all platforms; platform-specific code handles crypto, secure storage, and browser integration.
+
+- commonMain: shared UI (Compose), NIP implementations, networking
+- androidMain: EncryptedSharedPreferences, Android crypto
+- jvmMain: Desktop crypto (secp256k1-kmp), JVM Preferences
+- jsMain: NIP-07 browser extension, JS Ktor client
+- wasmJsMain: WebAssembly target
+
+## Supported NIPs
+
+- NIP-01: Basic protocol (event signing, subscriptions)
+- NIP-04: Encrypted direct messages
+- NIP-07: Browser signer extension API
+- NIP-19: bech32 entities (npub, nsec, note, nevent)
+- NIP-29: Relay-based groups (core protocol)
+- NIP-42: Authentication to relays
+- NIP-44: Versioned encryption
+- NIP-46: Remote signer (bunker)
+- NIP-65: Relay list metadata
+
+## Platform Support
+
+- Web: https://web.nostrord.com/
+- Android: APK builds, Google Play (planned)
+- Desktop: Windows, macOS, Linux (JVM)
+- iOS: in development
+
+## Funding
+
+Nostrord is supported by an OpenSats grant (sixteenth wave of Nostr grants, 2026).
+https://opensats.org/blog/sixteenth-wave-of-nostr-grants
+
+## Source Code
+
+Nostrord is open source under the Unlicense:
+https://github.com/nostrord/nostrord
+
+## Links
+
+- Website: https://nostrord.com
+- Web app: https://web.nostrord.com/
+- GitHub: https://github.com/nostrord/nostrord
+- Join group: https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord
+- OpenSats grant announcement: https://nostrord.com/blog/nostrord-opensats-grant.html
+
+## Contact
+
+Developer: Anderson Juhasc
