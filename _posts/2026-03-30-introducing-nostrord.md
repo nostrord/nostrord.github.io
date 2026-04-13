@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Introducing Nostrord: A NIP-29 Group Chat Client for Sovereign Communities — Nostrord Blog"
+title: "Introducing Nostrord: A NIP-29 Group Chat Client for Sovereign Communities - Nostrord Blog"
 post_title: "Introducing Nostrord: A NIP-29 Group Chat Client for Sovereign Communities"
 subtitle: "Group chat has always been centralized. We're changing that, one relay at a time."
 description: "Introducing Nostrord, a NIP-29 group chat client built with Kotlin Multiplatform and WebAssembly. Decentralized, censorship-resistant communities on Nostr."
@@ -83,24 +83,24 @@ We won't pretend KMP + WASM is free. The initial WASM bundle is bigger than a mi
 
 The web app at [web.nostrord.com](https://web.nostrord.com/){:rel="noopener noreferrer"} is live and ready to use:
 
-- **Multi-relay support** — connect to multiple NIP-29 relays at the same time. Switch between them or add your own whenever you want.
-- **NIP-29 group chat** — create groups, send messages, browse history. Public and private groups both work.
-- **Moderation basics** — delete messages and edit group metadata. Full admin operations like adding and removing members are coming soon.
-- **Three sign-in methods** — generate a fresh key in the app, use a NIP-07 browser extension (like nos2x or Nostrame), or connect via NIP-46 remote signer to keep your private key off the browser.
-- **Full Unicode and emoji** — no content restrictions beyond what your relay enforces, plus custom emoji support.
-- **Zap display** — you can see zap events from other users in group chats. Full zap creation with Lightning integration is on the roadmap.
-- **NIPs supported** — 01 (core protocol), 04 (encrypted DMs), 07 (browser extension signer), 11 (relay metadata), 19 (bech32 encoding), 27 (text note references), 29 (relay-based groups), 44 (modern encryption), 46 (remote signing), 65 (relay list metadata).
-- **Interoperable** — your groups and messages show up in any NIP-29 compatible client.
+- **Multi-relay support** - connect to multiple NIP-29 relays at the same time. Switch between them or add your own whenever you want.
+- **NIP-29 group chat** - create groups, send messages, browse history. Public and private groups both work.
+- **Moderation basics** - delete messages and edit group metadata. Full admin operations like adding and removing members are coming soon.
+- **Three sign-in methods** - generate a fresh key in the app, use a NIP-07 browser extension (like nos2x or Nostrame), or connect via NIP-46 remote signer to keep your private key off the browser.
+- **Full Unicode and emoji** - no content restrictions beyond what your relay enforces, plus custom emoji support.
+- **Zap display** - you can see zap events from other users in group chats. Full zap creation with Lightning integration is on the roadmap.
+- **NIPs supported** - 01 (core protocol), 04 (encrypted DMs), 07 (browser extension signer), 11 (relay metadata), 19 (bech32 encoding), 27 (text note references), 29 (relay-based groups), 44 (modern encryption), 46 (remote signing), 65 (relay list metadata).
+- **Interoperable** - your groups and messages show up in any NIP-29 compatible client.
 
 ## What's Coming Next
 
 The web app is our starting point, not the finish line. Here's what we're actively working on:
 
-- **Android and iOS apps** — native apps sharing the same KMP core. Same features as the web, with platform-native polish and background sync.
-- **Desktop apps** — Windows, macOS, and Linux builds via Compose for Desktop, all sharing the same core logic.
-- **Full admin operations** — UI for adding and removing members, managing roles, and banning users from groups.
-- **Zap creation** — Lightning integration so you can send zaps directly from group chats, not just view them.
-- **Push notifications** — opt-in notifications for group messages, mentions, and admin actions, supporting both web push and native push APIs.
+- **Android and iOS apps** - native apps sharing the same KMP core. Same features as the web, with platform-native polish and background sync.
+- **Desktop apps** - Windows, macOS, and Linux builds via Compose for Desktop, all sharing the same core logic.
+- **Full admin operations** - UI for adding and removing members, managing roles, and banning users from groups.
+- **Zap creation** - Lightning integration so you can send zaps directly from group chats, not just view them.
+- **Push notifications** - opt-in notifications for group messages, mentions, and admin actions, supporting both web push and native push APIs.
 
 <div class="callout">
 <p><strong>Follow progress:</strong> Watch the <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub repository</a> for updates, or open an issue to share ideas and report bugs.</p>
@@ -110,10 +110,10 @@ The web app is our starting point, not the finish line. Here's what we're active
 
 Nostrord is open source and we genuinely welcome contributions at every level:
 
-- **Code** — check out [open issues on GitHub](https://github.com/nostrord/nostrord/issues){:target="_blank" rel="noopener noreferrer"} for bugs and features tagged `good first issue`. Submit a PR, or open an issue to talk through an idea first.
-- **Testing and feedback** — use the [web app](https://web.nostrord.com/){:rel="noopener noreferrer"} and tell us what feels broken or confusing. Detailed bug reports with steps to reproduce are incredibly helpful, especially across different browsers, OSes, and relay setups.
-- **Run a NIP-29 relay** — more relays means more resilience and more choice. If you run infrastructure, consider deploying a NIP-29 compatible relay like [khatru](https://github.com/fiatjaf/khatru){:target="_blank" rel="noopener noreferrer"} or [relay29](https://github.com/fiatjaf/relay29){:target="_blank" rel="noopener noreferrer"} and sharing it with the community.
-- **Translations** — speak a language other than English? Reach out via [GitHub Discussions](https://github.com/nostrord/nostrord/issues){:target="_blank" rel="noopener noreferrer"}. i18n support is planned and translators will be credited.
+- **Code** - check out [open issues on GitHub](https://github.com/nostrord/nostrord/issues){:target="_blank" rel="noopener noreferrer"} for bugs and features tagged `good first issue`. Submit a PR, or open an issue to talk through an idea first.
+- **Testing and feedback** - use the [web app](https://web.nostrord.com/){:rel="noopener noreferrer"} and tell us what feels broken or confusing. Detailed bug reports with steps to reproduce are incredibly helpful, especially across different browsers, OSes, and relay setups.
+- **Run a NIP-29 relay** - more relays means more resilience and more choice. If you run infrastructure, consider deploying a NIP-29 compatible relay like [khatru](https://github.com/fiatjaf/khatru){:target="_blank" rel="noopener noreferrer"} or [relay29](https://github.com/fiatjaf/relay29){:target="_blank" rel="noopener noreferrer"} and sharing it with the community.
+- **Translations** - speak a language other than English? Reach out via [GitHub Discussions](https://github.com/nostrord/nostrord/issues){:target="_blank" rel="noopener noreferrer"}. i18n support is planned and translators will be credited.
 
 <div class="callout">
 <p><strong>Join the community:</strong> Chat with us on our <a href="https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord" target="_blank" rel="noopener noreferrer">Nostrord NIP-29 group</a>. Ask questions, share feedback, and connect with other users and contributors.</p>

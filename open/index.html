@@ -105,7 +105,7 @@
   .footer a { color: #6d6f78; text-decoration: none; }
   .footer a:hover { text-decoration: underline; }
 
-  /* Responsive — small screens */
+  /* Responsive - small screens */
   @media (max-width: 480px) {
     body { padding: 12px; }
     .card { padding: 20px 16px; }
@@ -185,7 +185,7 @@
 </div>
 
 <script>
-// Runs immediately — no module import delay.
+// Runs immediately - no module import delay.
 // nostr-tools is lazy-loaded only if AUTH is required.
 
 var params = new URLSearchParams(window.location.search);
@@ -253,7 +253,7 @@ if (!relay) {
     catch (_) {}
   }
 
-  // Ephemeral private key — generated instantly, no imports needed
+  // Ephemeral private key - generated instantly, no imports needed
   var sk = crypto.getRandomValues(new Uint8Array(32));
 
   // Lazy-load only @noble/curves (much smaller than nostr-tools) when AUTH is needed
@@ -420,7 +420,7 @@ if (!relay) {
       } catch (_) { reveal(); }
     }
   } else {
-    // Relay-only URL — fetch NIP-11 relay metadata
+    // Relay-only URL - fetch NIP-11 relay metadata
     document.getElementById('invite-text').textContent = 'Open this relay on Nostrord.';
     document.getElementById('group-loading').querySelector('.info').textContent = 'Loading relay info...';
     document.getElementById('group-loading').classList.remove('hidden');

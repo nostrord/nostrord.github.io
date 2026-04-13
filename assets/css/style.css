@@ -1332,7 +1332,7 @@ html {
    Blog Styles
    ============================================================ */
 
-/* Blog Hero — top section of a post page */
+/* Blog Hero - top section of a post page */
 .blog-hero {
   padding: 8rem 0 3rem;
   border-bottom: 1px solid var(--border);
@@ -1343,7 +1343,7 @@ html {
   margin: 0 auto;
 }
 
-/* Blog meta — date, author, tags row */
+/* Blog meta - date, author, tags row */
 .blog-meta {
   display: flex;
   align-items: center;
@@ -1379,7 +1379,7 @@ html {
   color: var(--text-muted);
 }
 
-/* Blog content area — article body */
+/* Blog content area - article body */
 .blog-content {
   max-width: 720px;
   margin: 0 auto;
@@ -1462,7 +1462,7 @@ html {
   color: var(--violet);
 }
 
-/* Callout box — highlighted inline CTA or note */
+/* Callout box - highlighted inline CTA or note */
 .blog-content .callout {
   border-left: 3px solid var(--violet);
   background: var(--bg-card);
@@ -1507,7 +1507,7 @@ html {
   line-height: 1.7;
 }
 
-/* Blog card — post in the listing */
+/* Blog card - post in the listing */
 .blog-list {
   max-width: 720px;
   margin: 0 auto;
