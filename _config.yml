@@ -6,6 +6,9 @@ lang: en
 
 permalink: /blog/:title.html
 
+livereload: true
+force_polling: true
+
 image: /assets/img/nostrord-app.png
 logo: /assets/img/nostrord.svg
 
