@@ -2,6 +2,7 @@
   <a href="{% if page.nav_home %}#why{% else %}/#why{% endif %}" class="nav-link">Why</a>
   <a href="{% if page.nav_home %}#features{% else %}/#features{% endif %}" class="nav-link">Features</a>
   <a href="{% if page.nav_home %}#platforms{% else %}/#platforms{% endif %}" class="nav-link">Platforms</a>
+  <a href="/download/" class="nav-link"{% if page.nav_download_active %} aria-current="page"{% endif %}>Download</a>
   <a href="{% if page.nav_home %}blog/{% else %}/blog/{% endif %}" class="nav-link"{% if page.nav_blog_active %} aria-current="page"{% endif %}>Blog</a>
   <a href="{% if page.nav_home %}#faq{% else %}/#faq{% endif %}" class="nav-link">FAQ</a>
   <a href="{% if page.nav_home %}#community{% else %}/#community{% endif %}" class="nav-link">Community</a>

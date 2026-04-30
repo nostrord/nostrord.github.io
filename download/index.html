@@ -1,0 +1,62 @@
+---
+layout: default
+title: "Download Nostrord - Android, iOS, Windows, macOS, Linux"
+description: "Download the latest Nostrord release. NIP-29 decentralized group chat client for Android, iOS, Windows, macOS, and Linux. Always grabs the latest version straight from GitHub."
+keywords: "download Nostrord, Nostrord APK, Nostrord Windows, Nostrord macOS, Nostrord Linux, NIP-29 client download, Nostr group chat download"
+permalink: /download/
+nav_download_active: true
+---
+
+<link rel="stylesheet" href="/assets/css/download.css">
+
+
+<section class="download-hero">
+  <div class="container">
+    <h1>Download <span>Nostrord</span></h1>
+    <p>Get the latest release for your platform. Always pulled live from GitHub - no stale links, no mirrors.</p>
+    <div class="release-meta" id="release-meta">
+      <span class="version-chip" id="version-chip">
+        <span class="spinner" style="width:10px;height:10px;border-width:1.5px"></span>
+        loading
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="download-section" id="primary-section">
+  <div class="container">
+    <div class="section-label">
+      <h2>Recommended for you</h2>
+      <p>Based on the device you're using right now</p>
+    </div>
+    <div id="primary-content">
+      <div class="state-box">
+        <span class="spinner"></span>
+        <p style="margin-top:1rem;color:var(--text-muted);">Fetching latest release&hellip;</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="download-section hidden" id="all-section">
+  <div class="container">
+    <div class="section-label">
+      <h2>All downloads</h2>
+      <p>Every binary attached to this release</p>
+    </div>
+    <div class="downloads-grid" id="downloads-grid"></div>
+  </div>
+</section>
+
+<section class="download-section hidden" id="notes-section">
+  <div class="container">
+    <div class="section-label">
+      <h2>Release notes</h2>
+      <p id="notes-version-label"></p>
+    </div>
+    <div class="notes-wrapper" id="notes-content"></div>
+  </div>
+</section>
+
+<script src="/assets/js/download.js"></script>
+
