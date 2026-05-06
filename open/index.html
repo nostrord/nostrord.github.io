@@ -192,6 +192,7 @@ var params = new URLSearchParams(window.location.search);
 var relay = params.get('relay') || '';
 var group = params.get('group') || '';
 var code = params.get('code') || '';
+var event = params.get('e') || '';
 
 if (!relay) {
   window.location.href = '/';
@@ -201,7 +202,7 @@ if (!relay) {
   webParams.set('relay', relay);
   if (group) webParams.set('group', group);
   if (code) webParams.set('code', code);
-
+  if (event) webParams.set('e', event);
   var appUrl = 'nostrord://open?' + webParams;
   document.getElementById('btn-app').href = appUrl;
   document.getElementById('btn-web').href = 'https://web.nostrord.com/?' + webParams;
@@ -296,6 +297,12 @@ if (!relay) {
     ws.send(JSON.stringify(['REQ', 'meta', { kinds: [39000], '#d': [groupId], limit: 1 }]));
   }
 
+  if (event) {
+    var inviteEl = document.getElementById('invite-text');
+    if (inviteEl) inviteEl.textContent = 'You received a link to a message in this group.';
+    document.title = 'View message on Nostrord';
+  }
+
   // Fetch group metadata
   if (group) {
     document.getElementById('group-loading').classList.remove('hidden');
@@ -316,8 +323,6 @@ if (!relay) {
         document.getElementById('display-group').textContent = data.name;
         document.title = 'Join ' + data.name + ' on Nostrord';
         setFallbackAvatar(data.name, group);
-        var ogTitle = document.querySelector('meta[property="og:title"]');
-        if (ogTitle) ogTitle.content = 'Join ' + data.name + ' on Nostrord';
       }
       if (data.picture) {
         var avatar = document.getElementById('group-avatar');
@@ -337,8 +342,6 @@ if (!relay) {
         var aboutEl = document.getElementById('display-about');
         aboutEl.textContent = truncated;
         aboutEl.classList.remove('hidden');
-        var ogDesc = document.querySelector('meta[property="og:description"]');
-        if (ogDesc) ogDesc.content = truncated;
       }
     }
 
