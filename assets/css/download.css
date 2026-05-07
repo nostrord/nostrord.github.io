@@ -271,6 +271,45 @@
 }
 @keyframes dl-spin { to { transform: rotate(360deg); } }
 
+
+/* Arch Linux pacman install command */
+.pacman-cmd {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.5rem;
+  margin-top: 0.6rem;
+  text-align: left;
+}
+.pacman-cmd code {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.copy-btn {
+  background: none;
+  border: none;
+  color: var(--violet);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.copy-btn:hover {
+  background: var(--violet-glow);
+}
+
 .hidden { display: none !important; }
 
 @media (max-width: 640px) {
