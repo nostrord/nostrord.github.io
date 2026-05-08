@@ -275,7 +275,7 @@
 /* Arch Linux pacman install command */
 .pacman-cmd {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -289,9 +289,8 @@
   font-size: 0.65rem;
   color: var(--text-secondary);
   flex: 1;
-  white-space: nowrap;
+  white-space: pre;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 .copy-btn {
   background: none;

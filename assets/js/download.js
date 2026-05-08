@@ -37,8 +37,8 @@
     else if (/\.(exe|msi)$/.test(lower))      { info.platform = 'windows'; info.label = 'installer'; }
     else if (/\.(dmg|pkg)$/.test(lower))      { info.platform = 'macos';   info.label = 'installer'; }
     else if (/\.appimage$/.test(lower))       { info.platform = 'linux';   info.label = 'AppImage'; }
-    else if (/\.deb$/.test(lower))            { info.platform = 'linux';   info.label = '.deb'; }
-    else if (/\.rpm$/.test(lower))            { info.platform = 'linux';   info.label = '.rpm'; }
+    else if (/\.deb$/.test(lower))            { info.platform = 'debian';  info.label = '.deb'; }
+    else if (/\.rpm$/.test(lower))            { info.platform = 'fedora';  info.label = '.rpm'; }
     else if (/\.flatpak$/.test(lower))        { info.platform = 'linux';   info.label = 'Flatpak'; }
     else if (/\.pkg\.tar\.(zst|xz|gz|bz2)$/.test(lower)) { info.platform = 'archlinux'; info.label = 'pacman'; }
     else if (/\.tar\.(gz|xz|bz2)$/.test(lower)) { info.platform = 'linux'; info.label = 'archive'; }
@@ -62,12 +62,14 @@
     windows: '<svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>',
     macos:   '<svg class="platform-icon" viewBox="-1.5 0 20 20" stroke="none" aria-label="Apple logo"><g fill="currentColor" stroke="none" fill-rule="evenodd"><g transform="translate(-46, -7279)"><path d="' + APPLE_PATH + '"/></g></g></svg>',
     linux:     '<svg class="platform-icon" viewBox="0 0 32 32" stroke="none" aria-label="Tux, the Linux mascot"><path fill="currentColor" stroke="none" d="' + TUX_PATH + '"/></svg>',
+    debian:    '<svg class="platform-icon" viewBox="0 0 32 32" stroke="none" aria-label="Linux"><path fill="currentColor" stroke="none" d="' + TUX_PATH + '"/></svg>',
+    fedora:    '<svg class="platform-icon" viewBox="0 0 32 32" stroke="none" aria-label="Linux"><path fill="currentColor" stroke="none" d="' + TUX_PATH + '"/></svg>',
     archlinux: '<svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-label="Arch Linux logo"><path d="' + ARCH_PATH + '"/></svg>',
     other:     '<svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>'
   };
   var PLATFORM_NAMES = {
     android: 'Android', ios: 'iOS', windows: 'Windows',
-    macos: 'macOS',     linux: 'Linux', archlinux: 'Arch Linux', other: 'Other'
+    macos: 'macOS',     linux: 'Linux', debian: 'Ubuntu / Debian', fedora: 'Fedora / Red Hat', archlinux: 'Arch Linux', other: 'Other'
   };
   function platformIcon(platform) {
     return PLATFORM_ICONS[platform] || PLATFORM_ICONS.other;
@@ -201,7 +203,7 @@
   function renderRelease(release) {
     var tag = release.tag_name || release.name || 'latest';
     var published = release.published_at;
-    var assets = (release.assets || []).filter(function(a) { return a && a.browser_download_url; });
+    var assets = (release.assets || []).filter(function(a) { return a && a.browser_download_url && !/\.sig$/i.test(a.name); });
 
     // Header meta
     var meta = document.getElementById('release-meta');
@@ -254,9 +256,13 @@
     }
   }
 
+  var LINUX_FALLBACKS = ['debian', 'fedora', 'linux'];
+
   function pickPrimary(assets, platform, arch) {
-    var matches = assets.filter(function(a) { return a.platform === platform; });
+    var candidates = platform === 'linux' ? LINUX_FALLBACKS : [platform];
+    var matches = assets.filter(function(a) { return candidates.indexOf(a.platform) !== -1; });
     if (matches.length === 0) return null;
+    matches.sort(function(a, b) { return candidates.indexOf(a.platform) - candidates.indexOf(b.platform); });
     if (arch) {
       var archMatch = matches.filter(function(a) { return a.arch === arch; });
       if (archMatch.length) return archMatch[0];
@@ -311,17 +317,35 @@
           '</svg>' +
           'Download ' + escapeHtml((PLATFORM_NAMES[asset.platform] || '') + ' ' + asset.label).trim() +
         '</a>' +
+        (function() {
+          var p = asset.platform;
+          if (p === 'archlinux') {
+            return '<div class="pacman-cmd">' +
+              '<code>yay -S nostrord-bin</code>' +
+              '<button class="copy-btn" data-cmd="yay -S nostrord-bin">Copy</button>' +
+            '</div>';
+          }
+          if (p === 'debian' || p === 'fedora') {
+            var installCmd = (p === 'debian' ? 'sudo apt install ./' : 'sudo dnf install ./') + asset.name;
+            return '<div class="pacman-cmd">' +
+              '<code>' + escapeHtml(installCmd) + '</code>' +
+              '<button class="copy-btn" data-cmd="' + escapeHtml(installCmd) + '">Copy</button>' +
+            '</div>';
+          }
+          return '';
+        })() +
         (meta.length ? '<div class="file-meta">' + escapeHtml(meta.join(' \xb7 ')) + '</div>' : '') +
         '<div class="file-meta">' + escapeHtml(asset.name) + '</div>' +
         '<a href="#all-section" class="alt-link">Looking for another platform? See all downloads &darr;</a>' +
       '</div>';
+    if (asset.platform === 'archlinux' || asset.platform === 'debian' || asset.platform === 'fedora') attachCopyListeners(content);
   }
 
   function renderAll(assets) {
     document.getElementById('all-section').classList.remove('hidden');
     var grid = document.getElementById('downloads-grid');
     // Sort: by platform priority, then arch
-    var order = { android: 1, ios: 2, windows: 3, macos: 4, linux: 5, archlinux: 6, other: 9 };
+    var order = { android: 1, ios: 2, windows: 3, macos: 4, linux: 5, debian: 6, fedora: 7, archlinux: 8, other: 9 };
     assets.sort(function(a, b) {
       var d = (order[a.platform] || 9) - (order[b.platform] || 9);
       if (d !== 0) return d;
@@ -333,15 +357,27 @@
       if (a.arch) bits.push(a.arch);
       if (a.size) bits.push(formatBytes(a.size));
       if (a.platform === 'archlinux') {
-        var cmd = 'sudo pacman -U ' + a.name;
         return '<div class="platform-card platform-card-download" title="' + escapeHtml(a.name) + '">' +
           platformIcon(a.platform) +
           '<h4>' + escapeHtml(PLATFORM_NAMES[a.platform] || 'Download') + '</h4>' +
           '<p>' + escapeHtml(bits.join(' \xb7 ')) + '</p>' +
           '<a class="download-badge" href="' + a.url + '">Download</a>' +
           '<div class="pacman-cmd">' +
-            '<code>' + escapeHtml(cmd) + '</code>' +
-            '<button class="copy-btn" data-cmd="' + escapeHtml(cmd) + '">Copy</button>' +
+            '<code>yay -S nostrord-bin</code>' +
+            '<button class="copy-btn" data-cmd="yay -S nostrord-bin">Copy</button>' +
+          '</div>' +
+        '</div>';
+      }
+      if (a.platform === 'debian' || a.platform === 'fedora') {
+        var installCmd = (a.platform === 'debian' ? 'sudo apt install ./' : 'sudo dnf install ./') + a.name;
+        return '<div class="platform-card platform-card-download" title="' + escapeHtml(a.name) + '">' +
+          platformIcon(a.platform) +
+          '<h4>' + escapeHtml(PLATFORM_NAMES[a.platform]) + '</h4>' +
+          '<p>' + escapeHtml(bits.join(' \xb7 ')) + '</p>' +
+          '<a class="download-badge" href="' + a.url + '">Download</a>' +
+          '<div class="pacman-cmd">' +
+            '<code>' + escapeHtml(installCmd) + '</code>' +
+            '<button class="copy-btn" data-cmd="' + escapeHtml(installCmd) + '">Copy</button>' +
           '</div>' +
         '</div>';
       }
