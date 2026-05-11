@@ -1,0 +1,63 @@
+---
+layout: default
+title: "Security - Nostrord"
+description: "How Nostrord protects you: keys, trust model, and responsible vulnerability disclosure."
+permalink: /safety/
+---
+
+<section class="blog-hero">
+  <div class="container">
+    <div class="blog-hero-inner">
+      <div class="blog-meta">
+        <span>Last updated: May 2026</span>
+      </div>
+      <h1>Security</h1>
+      <p style="margin-top:1rem;color:var(--text-secondary);font-size:1.1rem;line-height:1.7;">
+        Nostrord is built on a minimal trust model: the less you need to trust us, the better. This page covers account security, the relay's role in moderation, and responsible vulnerability disclosure.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="blog-content">
+
+      <h2>Your keys, your responsibility</h2>
+      <p>
+        Your Nostr private key is your identity. Anyone with access to it can sign events on your behalf. Guard it carefully.
+      </p>
+      <ul>
+        <li>Never share your private key (nsec) with anyone.</li>
+        <li>Prefer a remote signer (NIP-46 bunker) to keep your key on a separate device, away from the application.</li>
+        <li>Prefer a browser extension (NIP-07) over pasting your key (nsec) directly into the app. The extension isolates the key from the app, which then requests signatures instead of handling your key directly.</li>
+      </ul>
+
+      <h2>Relays and moderation</h2>
+      <p>
+        Nostrord uses NIP-29, where each group's administrators define the rules (who can join, who can post, which messages stay) and the relay enforces them. A group's security depends on both its administrators and the relay that hosts it. The relay is what technically makes the rules stick and, ultimately, may even stop hosting the group. Choose your relays carefully.
+      </p>
+
+      <h2>Responsible vulnerability disclosure</h2>
+      <p>
+        Found a security issue? Please do not open a public issue. Report it responsibly via <a href="https://github.com/nostrord/nostrord/security/advisories/new" target="_blank" rel="noopener noreferrer">GitHub private security advisory</a>. We'll respond as quickly as possible and coordinate a fix before any public disclosure.
+      </p>
+
+      <h2>Privacy</h2>
+      <p>
+        For information about data collection, relays, and content permanence, see our <a href="/privacy/">privacy policy</a>.
+      </p>
+
+      <h2>Open source</h2>
+      <p>
+        All code is available on <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub</a>. All security mechanisms and client-side protections can be verified directly in the source.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        For security questions, chat with us in the <a href="https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord" target="_blank" rel="noopener noreferrer">official Nostrord group</a> or open an issue on <a href="https://github.com/nostrord/nostrord/issues" target="_blank" rel="noopener noreferrer">GitHub</a>.
+      </p>
+
+    </div>
+  </div>
+</section>

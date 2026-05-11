@@ -1,0 +1,81 @@
+---
+layout: default
+title: "Privacy Policy - Nostrord"
+description: "Nostrord doesn't collect your data. No signup, no tracking, no servers. Your keys and your messages are yours."
+permalink: /privacy/
+---
+
+<section class="blog-hero">
+  <div class="container">
+    <div class="blog-hero-inner">
+      <div class="blog-meta">
+        <span>Last updated: May 2026</span>
+      </div>
+      <h1>Privacy Policy</h1>
+      <p style="margin-top:1rem;color:var(--text-secondary);font-size:1.1rem;line-height:1.7;">
+        Nostrord doesn't collect your data. There's no account to create, no server to trust, and no tracking of any kind.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="blog-content">
+
+      <h2>Your identity and your keys</h2>
+      <p>
+        Your Nostrord account is a cryptographic key you generate and control yourself. There's no signup with email, phone, or real name. If you sign in with a local key, it stays on your device and is never sent to any server of ours. How well that local storage is protected depends on the platform:
+      </p>
+      <ul>
+        <li><strong>Android</strong>: the key is encrypted via the Android Keystore (AES-256-GCM) using <code>EncryptedSharedPreferences</code>. The master key is isolated in the system Keystore (hardware-backed on most modern devices) and is not extractable from the file system.</li>
+        <li><strong>Desktop (Windows, macOS, Linux)</strong>: the key is encrypted locally with AES, but the encryption key is generated and stored in the same preferences file as the ciphertext. This protects against casual inspection, but <strong>not</strong> against another user on the same machine, malware running as your user, or backup copies of your config directory. We're working on replacing this layer with OS keychain integration. In the meantime, for real protection on desktop, consider using a remote signer (NIP-46).</li>
+        <li><strong>Web</strong>: the key lives in the browser's <code>localStorage</code>, with no additional encryption. Any script with same-origin access (a malicious browser extension, a compromised dependency) can read it. <strong>On the web, we strongly recommend using a remote signer (NIP-46) or a browser extension (NIP-07) instead of pasting your key directly.</strong></li>
+      </ul>
+      <p>
+        If you use a remote signer (NIP-46), your private key never touches the application, on any platform. If you use a browser extension (NIP-07), the key stays isolated in the extension's space and the app only receives signatures. These two options are the only ones that offer strong protection on desktop and web today.
+      </p>
+
+      <h2>Messages and groups</h2>
+      <p>
+        Your messages are signed Nostr events that travel through the relays you choose. Nostrord does not operate any relay. We don't have access to the content of your conversations. The operators of the relays you connect to control that data, and each one's privacy policy applies independently of this application.
+      </p>
+
+      <h2>The nostrord.com site</h2>
+      <p>
+        This site does not use tracking cookies, ad pixels, or third-party analytics. We don't collect your IP address, user agent, or any identifiable data. The only information your browser sends is what any standard HTTP request sends to the hosting server.
+      </p>
+
+      <h2>IP address and relays</h2>
+      <p>
+        When you connect to a relay, its operator can see your IP address, your public key, and the events you publish or request. Nostrord has no control over what relays log. If IP privacy matters to you, consider using a VPN or Tor. Each relay's policies apply independently of this application.
+      </p>
+
+      <h2>Content permanence</h2>
+      <p>
+        Treat anything you publish on Nostr as permanent. When you delete an event, Nostrord sends the deletion request to the connected relays, but other relays that already received the event may not honor that request. There's no guarantee that a deleted post disappears from the entire network.
+      </p>
+
+      <h2>Media uploads</h2>
+      <p>
+        When you upload images, video, or audio from inside the app, the file is sent to <a href="https://nostr.build" target="_blank" rel="noopener noreferrer">nostr.build</a>, a third-party media hosting service (not operated by Nostrord). Authentication follows NIP-98 and the per-file limit is 20 MB. We don't have access to those files or to the upload traffic, but nostr.build sees the uploaded file, your IP address, and the public key used for authentication. nostr.build's privacy policies apply independently of this application.
+      </p>
+
+      <h2>Open source</h2>
+      <p>
+        All of the app's code is public and can be audited at any time. There is no hidden telemetry. What you see in the code is what runs on your device.
+      </p>
+
+      <h2>Security</h2>
+      <p>
+        For information about account protection and responsible vulnerability disclosure, see our <a href="/safety/">security page</a>.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about privacy? Open an issue on <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer">GitHub</a> or chat with us in the <a href="https://web.nostrord.com/?relay=groups.0xchat.com&group=nostrord" target="_blank" rel="noopener noreferrer">official Nostrord group</a>.
+      </p>
+
+    </div>
+  </div>
+</section>

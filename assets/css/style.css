@@ -147,6 +147,9 @@ header {
 }
 
 .btn-launch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;
@@ -156,6 +159,13 @@ header {
   border-radius: 6px;
   text-decoration: none;
   transition: all 0.15s;
+}
+
+.ext-icon {
+  width: 0.85em;
+  height: 0.85em;
+  flex-shrink: 0;
+  vertical-align: -0.1em;
 }
 
 .btn-launch:hover {
@@ -987,6 +997,34 @@ header {
   border-bottom-color: var(--violet);
 }
 
+.platform-extras {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.platform-extra {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  opacity: 0.6;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+.platform-extra svg {
+  width: 100%;
+  height: 100%;
+}
+
+.platform-card-download:hover .platform-extra {
+  opacity: 0.9;
+  color: var(--violet);
+}
+
 /* Built With */
 .built-with {
   padding: 4rem 0;
@@ -1218,6 +1256,7 @@ header {
 .community-action {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.8rem;
   font-weight: 500;

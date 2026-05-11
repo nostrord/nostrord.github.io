@@ -51,6 +51,8 @@
     return info;
   }
 
+  var EXT_ICON = '<svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+
   // ── Icons (mirrors home page Available Everywhere section) ──────────────
   var ARCH_PATH = 'M11.390232.60509C10.375655 3.09168 9.764285 4.7185 8.63513 7.13162c.692712.734695 1.542857 1.589214 2.923032 2.553937-1.484256-.610496-2.49621-1.223615-3.25277-1.859475-1.444897 3.015743-3.710204 7.311953-8.30554 15.568513 3.612246-2.08513 6.411955-3.36997 9.020993-3.861516-.111954-.48105-.175802-1.003208-.17143-1.54723l.0035-.115453c.057725-2.314286 1.261224-4.09417 2.68688-3.972595 1.425656.119825 2.53382 2.095627 2.477843 4.409038-.010496.43557-.06035.85452-.146064 1.242857 2.58105.504665 5.351895 1.78688 8.914286 3.844024-.702333-1.29271-1.329447-2.4586-1.928572-3.569387-.943732-.731196-1.926822-1.6828-3.933236-2.71312 1.3793.3586 2.366764.77143 3.136443 1.23411C13.970407 7.010922 13.478862 5.503924 11.390232.60509zM22.897813 21.360193v-.623615h-.233528v-.083965h.561516v.083965h-.2344v.623615h-.093587M23.322886 21.360193v-.70758h.14169l.167056.501166c.015744.04723.027114.082215.03411.10583.007873-.025365.020118-.06385.038485-.113703l.168805-.493294h.126822v.70758h-.090962v-.593003l-.206414.593003h-.083965l-.204665-.602624v.602623h-.090962';
   var APPLE_PATH = 'M57.5708873,7282.19296 C58.2999598,7281.34797 58.7914012,7280.17098 58.6569121,7279 C57.6062792,7279.04 56.3352055,7279.67099 55.5818643,7280.51498 C54.905374,7281.26397 54.3148354,7282.46095 54.4735932,7283.60894 C55.6455696,7283.69593 56.8418148,7283.03894 57.5708873,7282.19296 M60.1989864,7289.62485 C60.2283111,7292.65181 62.9696641,7293.65879 63,7293.67179 C62.9777537,7293.74279 62.562152,7295.10677 61.5560117,7296.51675 C60.6853718,7297.73474 59.7823735,7298.94772 58.3596204,7298.97372 C56.9621472,7298.99872 56.5121648,7298.17973 54.9134635,7298.17973 C53.3157735,7298.17973 52.8162425,7298.94772 51.4935978,7298.99872 C50.1203933,7299.04772 49.0738052,7297.68074 48.197098,7296.46676 C46.4032359,7293.98379 45.0330649,7289.44985 46.8734421,7286.3899 C47.7875635,7284.87092 49.4206455,7283.90793 51.1942837,7283.88393 C52.5422083,7283.85893 53.8153044,7284.75292 54.6394294,7284.75292 C55.4635543,7284.75292 57.0106846,7283.67793 58.6366882,7283.83593 C59.3172232,7283.86293 61.2283842,7284.09893 62.4549652,7285.8199 C62.355868,7285.8789 60.1747177,7287.09489 60.1989864,7289.62485';
@@ -194,7 +196,7 @@
         '<h3>' + escapeHtml(message) + '</h3>' +
         (details ? '<p>' + escapeHtml(details) + '</p>' : '') +
         '<a href="' + RELEASES_URL + '" target="_blank" rel="noopener noreferrer" class="btn-secondary">' +
-          'View releases on GitHub' +
+          'View releases on GitHub' + EXT_ICON +
         '</a>' +
       '</div>';
     document.getElementById('version-chip').textContent = 'unavailable';
@@ -211,7 +213,7 @@
     meta.innerHTML =
       '<span class="version-chip">' + escapeHtml(tag) + '</span>' +
       (dateStr ? '<span class="release-date">released ' + escapeHtml(dateStr) + '</span>' : '') +
-      '<a href="' + RELEASES_URL + '" target="_blank" rel="noopener noreferrer">all releases &rarr;</a>';
+      '<a href="' + RELEASES_URL + '" target="_blank" rel="noopener noreferrer">all releases ' + EXT_ICON + '</a>';
 
     // Classify assets
     var classified = assets.map(function(a) {
@@ -233,7 +235,7 @@
           '<h3>This release has no binaries yet</h3>' +
           '<p>The latest release (' + escapeHtml(tag) + ') was published without any downloadable assets. Check back soon or build from source.</p>' +
           '<a href="https://github.com/' + REPO + '" target="_blank" rel="noopener noreferrer" class="btn-secondary">' +
-            'Build from source' +
+            'Build from source' + EXT_ICON +
           '</a>' +
         '</div>';
       return;
@@ -251,7 +253,7 @@
     // Release notes
     if (release.body && release.body.trim()) {
       document.getElementById('notes-section').classList.remove('hidden');
-      document.getElementById('notes-version-label').textContent = 'What’s in ' + tag;
+      document.getElementById('notes-version-label').textContent = "What's in " + tag;
       document.getElementById('notes-content').innerHTML = renderMarkdown(release.body);
     }
   }
@@ -296,8 +298,8 @@
       content.innerHTML =
         '<div class="state-box">' +
           '<h3>No build for ' + escapeHtml(name) + ' yet</h3>' +
-          '<p>This release doesn’t include a binary for your detected platform. Try one of the other downloads below, use the web app, or build from source.</p>' +
-          '<a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary">Open web app</a>' +
+          "<p>This release doesn't include a binary for your detected platform. Try one of the other downloads below, use the web app, or build from source.</p>" +
+          '<a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary">Open web app' + EXT_ICON + '</a>' +
         '</div>';
       return;
     }
@@ -395,7 +397,7 @@
   fetch(API_URL, { headers: { 'Accept': 'application/vnd.github+json' } })
     .then(function(r) {
       if (r.status === 404) {
-        renderError('No releases yet', 'Nostrord hasn’t published a release on GitHub yet. Use the web app or build from source while binaries are in the works.');
+        renderError('No releases yet', "Nostrord hasn't published a release on GitHub yet. Use the web app or build from source while binaries are in the works.");
         return null;
       }
       if (r.status === 403) {
@@ -410,6 +412,8 @@
       renderRelease(release);
     })
     .catch(function(err) {
-      renderError('Couldn’t reach GitHub', err && err.message ? err.message : 'Please check your connection and try again.');
+      renderError("Couldn't reach GitHub", err && err.message ? err.message : 'Please check your connection and try again.');
     });
+
+  attachCopyListeners(document);
 })();
