@@ -435,7 +435,7 @@ structured_data:
         </details>
         <details class="faq-item">
           <summary>Where are my keys stored?</summary>
-          <p>Your keys stay on your device, but the level of protection varies by platform. Android stores them in the hardware-backed system Keystore (AES-256-GCM), which is solid. Desktop encrypts them locally but keeps the encryption key in the same preferences file, so it does not protect against malware or another user on the machine. Web stores them in plain localStorage. On desktop and web, we strongly recommend a NIP-46 remote signer (bunker), or on web a NIP-07 browser extension. With NIP-46, your key stays on a separate device and the app only ever sees signed events.</p>
+          <p>Your keys stay on your device, but the level of protection varies by platform. Android uses the hardware-backed system Keystore (AES-256-GCM). Desktop tries the OS keychain first (Credential Manager on Windows, Keychain Access on macOS, libsecret or kwallet on Linux) and falls back to a passphrase you set if the keychain is not available; either way, no raw key is stored next to the ciphertext. Web stores them in plain localStorage with no additional encryption. On web we strongly recommend a NIP-46 remote signer (bunker) or a NIP-07 browser extension; with NIP-46 your key stays on a separate device and the app only ever sees signed events.</p>
         </details>
         <details class="faq-item">
           <summary>What relays can I use?</summary>

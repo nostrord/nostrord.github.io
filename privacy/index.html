@@ -29,11 +29,11 @@ permalink: /privacy/
       </p>
       <ul>
         <li><strong>Android</strong>: the key is encrypted via the Android Keystore (AES-256-GCM) using <code>EncryptedSharedPreferences</code>. The master key is isolated in the system Keystore (hardware-backed on most modern devices) and is not extractable from the file system.</li>
-        <li><strong>Desktop (Windows, macOS, Linux)</strong>: the key is encrypted locally with AES, but the encryption key is generated and stored in the same preferences file as the ciphertext. This protects against casual inspection, but <strong>not</strong> against another user on the same machine, malware running as your user, or backup copies of your config directory. We're working on replacing this layer with OS keychain integration. In the meantime, for real protection on desktop, consider using a remote signer (NIP-46).</li>
+        <li><strong>Desktop (Windows, macOS, Linux)</strong>: the app tries the OS keychain first (Credential Manager on Windows, Keychain Access on macOS, libsecret or kwallet on Linux). If the keychain is available, the master encryption key is stored there and the preferences file contains only ciphertext. If the keychain is not available, the app prompts you to set a passphrase; the key is derived from it using a slow hash designed to resist brute-force, and only the ciphertext is written to disk.</li>
         <li><strong>Web</strong>: the key lives in the browser's <code>localStorage</code>, with no additional encryption. Any script with same-origin access (a malicious browser extension, a compromised dependency) can read it. <strong>On the web, we strongly recommend using a remote signer (NIP-46) or a browser extension (NIP-07) instead of pasting your key directly.</strong></li>
       </ul>
       <p>
-        If you use a remote signer (NIP-46), your private key never touches the application, on any platform. If you use a browser extension (NIP-07), the key stays isolated in the extension's space and the app only receives signatures. These two options are the only ones that offer strong protection on desktop and web today.
+        If you use a remote signer (NIP-46), your private key never touches the application, on any platform. If you use a browser extension (NIP-07), the key stays isolated in the extension's space and the app only receives signatures. On the web, these are the only options that offer strong protection.
       </p>
 
       <h2>Messages and groups</h2>
