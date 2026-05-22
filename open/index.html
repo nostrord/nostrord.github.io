@@ -59,6 +59,8 @@
     font-weight: 700;
     color: #fff;
   }
+  .generic-logo { background: transparent; }
+  .generic-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
   .group-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
   .group-about { color: #b5bac1; font-size: 13px; margin-bottom: 4px; }
   .group-meta { color: #949ba4; font-size: 12px; margin-bottom: 16px; }
@@ -165,6 +167,10 @@
     <div class="group-relay" id="display-relay"></div>
   </div>
 
+  <div id="generic-logo" class="avatar-wrapper generic-logo hidden">
+    <img src="/assets/img/nostrord.svg" alt="Nostrord">
+  </div>
+
   <div id="content" class="hidden">
     <div class="info" id="invite-text">You've been invited to join this group on Nostrord.</div>
     <div class="buttons">
@@ -195,7 +201,24 @@ var code = params.get('code') || '';
 var event = params.get('e') || '';
 
 if (!relay) {
-  window.location.href = '/';
+  // Generic open link - no relay/group needed. Just open the app, web, or offer download.
+  var genParams = new URLSearchParams();
+  if (group) genParams.set('group', group);
+  if (code) genParams.set('code', code);
+  if (event) genParams.set('e', event);
+  var genQuery = genParams.toString();
+  var appUrl = 'nostrord://open' + (genQuery ? '?' + genQuery : '');
+  var webUrl = 'https://web.nostrord.com/' + (genQuery ? '?' + genQuery : '');
+
+  document.getElementById('btn-app').href = appUrl;
+  document.getElementById('btn-web').href = webUrl;
+  document.getElementById('invite-text').textContent = 'Open Nostrord to continue.';
+  document.title = 'Open Nostrord';
+  document.getElementById('generic-logo').classList.remove('hidden');
+  document.getElementById('content').classList.remove('hidden');
+
+  // Attempt to open the app; buttons stay visible as a fallback.
+  window.location.href = appUrl;
 } else {
   // Build URLs
   var webParams = new URLSearchParams();
