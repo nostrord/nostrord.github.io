@@ -16,177 +16,54 @@
 <meta name="twitter:title" content="Join a group on Nostrord">
 <meta name="twitter:description" content="Simple, reliable, and private group messaging powered by Nostr.">
 <meta name="twitter:image" content="https://nostrord.com/assets/img/nostrord-app.png">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #1e1f22;
-    color: #e0e0e0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100dvh;
-    padding: 24px;
-  }
-  .card {
-    background: #2b2d31;
-    border-radius: 12px;
-    padding: 32px;
-    max-width: 420px;
-    width: 100%;
-    text-align: center;
-  }
-  .logo { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
-  .subtitle { color: #949ba4; font-size: 14px; margin-bottom: 24px; }
-  .avatar-wrapper {
-    width: 64px; height: 64px;
-    border-radius: 16px;
-    margin: 0 auto 12px;
-    overflow: hidden;
-    position: relative;
-  }
-  .group-avatar {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    display: none;
-  }
-  .avatar-fallback {
-    width: 100%; height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: 700;
-    color: #fff;
-  }
-  .generic-logo { background: transparent; }
-  .generic-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .group-name { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
-  .group-about { color: #b5bac1; font-size: 13px; margin-bottom: 4px; }
-  .group-meta { color: #949ba4; font-size: 12px; margin-bottom: 16px; }
-  .group-relay { color: #949ba4; font-size: 13px; margin-bottom: 24px; }
-  .info { color: #949ba4; font-size: 14px; margin-bottom: 20px; }
-  .btn {
-    display: inline-block;
-    padding: 10px 24px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    margin: 4px;
-  }
-  .btn-primary { background: #5865f2; color: #fff; }
-  .btn-primary:hover { background: #4752c4; }
-  .btn-secondary { background: #404249; color: #e0e0e0; }
-  .btn-secondary:hover { background: #4e5058; }
-  .buttons { margin-top: 16px; }
-  .hidden { display: none; }
-  .download-section {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid #3a3b3e;
-  }
-  .download-text {
-    color: #949ba4;
-    font-size: 13px;
-    margin-bottom: 8px;
-  }
-  .download-text a {
-    color: #5865f2;
-    text-decoration: none;
-    font-weight: 600;
-  }
-  .download-text a:hover { text-decoration: underline; }
-  .footer {
-    margin-top: 20px;
-    color: #6d6f78;
-    font-size: 11px;
-  }
-  .footer a { color: #6d6f78; text-decoration: none; }
-  .footer a:hover { text-decoration: underline; }
 
-  /* Responsive - small screens */
-  @media (max-width: 480px) {
-    body { padding: 12px; }
-    .card { padding: 20px 16px; }
-    .logo { font-size: 24px; margin-bottom: 4px; }
-    .subtitle { margin-bottom: 16px; }
-    .info { margin-bottom: 12px; }
-    .download-section { margin-top: 16px; padding-top: 14px; }
-    .footer { margin-top: 12px; }
-    .buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-top: 12px;
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      margin: 0;
-      padding: 12px 24px;
-    }
-  }
-
-  /* Very small screens (older/budget phones) */
-  @media (max-width: 320px) {
-    body { padding: 8px; }
-    .card { padding: 16px 12px; }
-    .logo { font-size: 22px; }
-    .subtitle { font-size: 12px; }
-    .group-name { font-size: 16px; }
-    .btn { font-size: 13px; padding: 10px 16px; }
-  }
-
-  /* Word break for long group names/descriptions */
-  .group-name, .group-about, .group-relay {
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-</style>
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Shared site styles (already cached after visiting the homepage) -->
+<link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<body>
-<div class="card">
-  <div class="logo">Nostrord</div>
-  <div class="subtitle">NIP-29 Group Messaging</div>
+<body class="open-page">
+<div class="open-card">
+  <div class="open-logo">Nostrord</div>
+  <div class="open-subtitle">NIP-29 Group Messaging</div>
 
   <div id="group-loading" class="hidden">
-    <div class="spinner"></div>
-    <div class="info">Loading group info...</div>
+    <div class="open-spinner"></div>
+    <div class="open-info">Loading group info...</div>
   </div>
 
   <div id="group-info" class="hidden">
-    <div class="avatar-wrapper" id="avatar-wrapper">
-      <div class="avatar-fallback" id="avatar-fallback"></div>
-      <img id="group-avatar" class="group-avatar" alt="">
+    <div class="open-avatar" id="avatar-wrapper">
+      <div class="open-avatar-fallback" id="avatar-fallback"></div>
+      <img id="group-avatar" class="open-avatar-img" alt="">
     </div>
-    <div class="group-name" id="display-group"></div>
-    <div class="group-about hidden" id="display-about"></div>
-    <div class="group-relay" id="display-relay"></div>
+    <div class="open-title" id="display-group"></div>
+    <div class="open-about hidden" id="display-about"></div>
+    <div class="open-relay" id="display-relay"></div>
   </div>
 
-  <div id="generic-logo" class="avatar-wrapper generic-logo hidden">
+  <div id="generic-logo" class="open-avatar is-logo hidden">
     <img src="/assets/img/nostrord.svg" alt="Nostrord">
   </div>
 
   <div id="content" class="hidden">
-    <div class="info" id="invite-text">You've been invited to join this group on Nostrord.</div>
-    <div class="buttons">
-      <a id="btn-app" class="btn btn-primary" href="#">Open in Nostrord</a>
-      <a id="btn-web" class="btn btn-secondary" href="#">Continue in Browser</a>
+    <div class="open-info" id="invite-text">You've been invited to join this group on Nostrord.</div>
+    <div class="open-buttons">
+      <a id="btn-app" class="open-btn open-btn-primary" href="#">Open in Nostrord</a>
+      <a id="btn-web" class="open-btn open-btn-secondary" href="#">Continue in Browser</a>
     </div>
-    <div class="download-section">
-      <div class="download-text">Don't have the app yet? <a href="https://nostrord.com/download/">Download Nostrord</a></div>
+    <div class="open-download">
+      <div class="open-download-text">Don't have the app yet? <a href="https://nostrord.com/download/">Download Nostrord</a></div>
     </div>
-    <div class="footer">
+    <div class="open-footer">
       <a href="https://nostrord.com">nostrord.com</a> &middot; NIP-29 Group Messaging
     </div>
   </div>
 
   <div id="error" class="hidden">
-    <div class="info">Missing relay parameter.</div>
+    <div class="open-info">Missing relay parameter.</div>
   </div>
 </div>
 
@@ -217,8 +94,13 @@ if (!relay) {
   document.getElementById('generic-logo').classList.remove('hidden');
   document.getElementById('content').classList.remove('hidden');
 
-  // Attempt to open the app; buttons stay visible as a fallback.
-  window.location.href = appUrl;
+  // On mobile, try to open the native app (buttons stay as a fallback). On
+  // desktop we don't auto-fire the custom scheme: most users only have the web
+  // app, and firing nostrord:// just triggers an "open app?" popup. Shared
+  // https links are handled by Universal Links (iOS) / App Links (Android),
+  // which open the app directly when installed without any popup.
+  var isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent || '');
+  if (isMobile) window.location.href = appUrl;
 } else {
   // Build URLs
   var webParams = new URLSearchParams();
@@ -448,7 +330,7 @@ if (!relay) {
   } else {
     // Relay-only URL - fetch NIP-11 relay metadata
     document.getElementById('invite-text').textContent = 'Open this relay on Nostrord.';
-    document.getElementById('group-loading').querySelector('.info').textContent = 'Loading relay info...';
+    document.getElementById('group-loading').querySelector('.open-info').textContent = 'Loading relay info...';
     document.getElementById('group-loading').classList.remove('hidden');
     document.getElementById('display-group').textContent = relay;
     document.getElementById('display-relay').textContent = '';
