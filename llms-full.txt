@@ -21,45 +21,90 @@ NIP-29 is the Nostr specification for relay-based groups. It defines:
 
 This differs from IRC-style channels because groups have persistent state, moderation tools, and cryptographic identity. It differs from Matrix or federated chat because there is no federation protocol - each group lives on a single relay.
 
+Current release: v2.10.1
+
 ## Key Features
 
 ### Core Messaging
 
 - Real-time chat via WebSocket subscriptions to Nostr relays
-- Threaded replies (reply-to relationship via NIP-10-style tags)
-- Rich text with link previews, emoji, and mentions
-- Image and file embedding via NIP-94 / NIP-96
+- Replies inside chat (kind:9 carrying a `q` tag, the NIP-C7 convention; NIP-10 `e`-marker replies are only tolerated on read)
+- Quote events, @mentions (NIP-27), and rich text rendering
+- Inline image, video, and audio playback, plus YouTube link cards and an image viewer with zoom and pan
+- Emoji reactions with a categorized Unicode picker and recent-emoji memory. Custom emoji (NIP-30) arriving from other clients are rendered inline, but the picker does not offer custom emoji to send
+- Image, video, and audio uploads to Blossom servers (multi-server with mirroring) or a NIP-96 host, selectable in Settings, with `imeta` media tags (NIP-92) for dimensions, mime, hash, and size
 - Message deletion (by author or admin) per NIP-09
+- Threads: forum-style discussions built on NIP-22 comments (kind:1111) over a NIP-29 forum root, with reactions, mentions and a split view on desktop
 
-### Moderation and Permissions
+### Notifications and Unread
 
-- Admin roles with promote/demote capabilities
+- Per-group unread state across sessions, tracked by `UnreadManager`
+- Focus-aware muting: the conversation you are actively reading does not generate notifications
+- On web: browser notifications via the Notification API and tab-title badges (e.g. `(3) Nostrord`)
+- On native (Android, iOS, Desktop JVM): notifications are no-op stubs; unread tracking still works in-app. There is no FCM/APNs push and no system notification tray integration
+
+### Group Management and Moderation
+
+- Group creation flow with metadata (name, description, picture)
+- Invite codes for controlled access to private groups
+- Join requests review (approve or reject incoming members)
+- Edit group metadata (name, description, picture, type)
+- Add or remove members; promote and demote admins
 - Per-member permissions (post, moderate, invite)
 - Relay-enforced membership (the relay rejects unauthorized events)
 - Message removal by admins
-- Member kick and ban
+- Channels: a single-level hierarchy of NIP-29 groups (kind:39000 `parent`/`child` tags, not part of the NIP-29 spec) rendered as a sidebar tree, with admin-gated channel creation, drag-and-drop ordering and a Manage > Hierarchy tab. Not behind an app feature flag, but the whole UI is hidden unless the relay advertises `nip29.subgroups` in its NIP-11 document, which most public NIP-29 relays do not.
 
 ### Identity and Signing
 
 - Nostr keypair identity (no email, phone, or username)
 - NIP-07 browser extension support for web signing
 - NIP-46 remote signer (bunker) for hardware-like separation of keys
+- NIP-55 external signer on Android (Amber or any compatible signer app)
+- NIP-49 password-protected private keys (ncryptsec) for import and export
+- Login with Google (Pomegranate), built on the promenade FROST threshold signer: the Nostr key is split into shards held by independent operators and the client signs over plain NIP-46 through a coordinator, so no single party, Nostrord included, holds the whole key. The user can export the nsec at any time. Available on web, Android and desktop; iOS in progress
+- Multiple accounts with one-tap switching, each with its own session and storage
 - NIP-19 bech32 encoding (npub, nsec, note, nevent, naddr)
 - NIP-42 relay authentication
 
 ### Privacy
 
-- NIP-04 encrypted direct messages (legacy)
-- NIP-44 versioned encryption (current standard)
+- Encrypted direct messages via NIP-17 gift wrap (kind:14 chat, kind:15 files) sealed with NIP-44 and wrapped with NIP-59, so relays see neither content nor the conversation graph
+- User-configurable DM relays (kind:10050)
+- NIP-04 encrypted direct messages kept only for compatibility with older clients
+- User mute lists (NIP-51), synced across devices as self-encrypted app data (NIP-78)
 - No analytics, no telemetry
 - No account server, no data harvesting
 
+### Payments
+
+- Lightning zaps (NIP-57) on any message and on profiles
+- `lud16`/`lud06` resolved through LNURL-pay, zap request (kind 9734) signed by the user, invoice paid in the user's own wallet via QR code, `lightning:` URI or copy, and confirmed by watching for the zap receipt (kind 9735)
+- No custodial wallet, no in-app balance, no platform fee
+
+### Live Audio and Video Spaces
+
+- Live audio and video rooms inside a NIP-29 group. Media runs on a LiveKit SFU that the relay operator deploys alongside the relay, with tokens minted at `/.well-known/nip29/livekit/<group-id>`, so this is not the Nostr relay carrying the media
+- Presence is a `livekit` tag on kind:39000, enabled by an admin via kind:9002; the live roster is kind:39004, a convention rather than part of NIP-29
+- Clients on web, Android and desktop, with a live-space bar for joining an ongoing room. The room is created lazily by the first participant
+- Only a few relays run the companion today, for example pyramid.fiatjaf.com
+
+### Discovery
+
+- Discover tab built from the people you follow (NIP-02) and their public group lists (kind:10009), ranked by how many of your contacts are members
+- Recommended tab seeded from a curated group list
+- Light and dark themes, following the system setting or a manual choice
+
 ### Multi-Platform
 
-- Web: runs in any modern browser via JS or WebAssembly target
-- Desktop: JVM native apps for Windows, macOS, Linux
-- Android: native Kotlin app via Compose Multiplatform
+- Web: runs in any modern browser as a DOM-based app (live at https://web.nostrord.com/)
+- Android: native Kotlin app via Compose Multiplatform (APK available on GitHub Releases)
+- Windows: native desktop app via Compose Multiplatform (MSI installer available on GitHub Releases)
+- macOS: native desktop app via Compose Multiplatform (DMG for Apple Silicon available on GitHub Releases)
+- Linux: native desktop app via Compose Multiplatform (.deb and .rpm on GitHub Releases, Arch package on the AUR as `nostrord-bin`)
 - iOS: Compose Multiplatform UI (in development)
+
+Pre-built binaries for Android, Windows, macOS and Linux are published on GitHub Releases. The dynamic downloads page at https://nostrord.com/download/ always serves the latest release for the visitor's detected platform.
 
 ## How It Works
 
@@ -77,19 +122,25 @@ Nostrord uses Kotlin Multiplatform (KMP) with Compose Multiplatform for UI, shar
 
 ### Module Map
 
-- `composeApp/commonMain`: shared UI, business logic, NIP implementations
+- `composeApp/commonMain`: shared business logic, view models, NIP implementations
+- `composeApp/uiComposeMain`: shared Compose UI for Android, desktop and iOS
 - `composeApp/androidMain`: Android-specific storage and crypto
 - `composeApp/jvmMain`: JVM Desktop crypto (secp256k1-kmp), JVM Preferences
-- `composeApp/jsMain`: NIP-07 window.nostr, JS Ktor client
-- `composeApp/wasmJsMain`: WebAssembly target
+- `composeApp/jsMain`: NIP-07 window.nostr, JS Ktor client, DOM-based web UI (the build live at web.nostrord.com)
 
 ### Core Components
 
 - `NostrRepository`: public facade for group/message operations
 - `SessionManager`: authentication and NIP-42 handling
 - `AuthManager`: low-level key and signer management
-- `GroupManager`: NIP-29 group logic
+- `GroupManager`: NIP-29 group logic, including the channel hierarchy and threads
+- `DmManager`: NIP-17 gift-wrapped direct messages
+- `ZapManager`: NIP-57 zap requests, invoices and receipts
 - `ConnectionManager`: WebSocket lifecycle across relays
+- `OutboxManager` and `RelayListManager`: NIP-65 outbox model and relay list resolution
+- `UnreadManager`: per-group unread tracking with focus-aware suppression
+- `NotificationService`: platform abstraction over browser Notification API (web) and no-op stubs (native)
+- `EventDeduplicator`: dedup events across multiple relays
 - `AppModule`: dependency injection entry point
 
 ### Key Dependencies
@@ -106,15 +157,34 @@ Nostrord uses Kotlin Multiplatform (KMP) with Compose Multiplatform for UI, shar
 | NIP | Description | Status |
 |-----|-------------|--------|
 | NIP-01 | Basic protocol (events, subscriptions) | Implemented |
-| NIP-04 | Encrypted direct messages | Implemented |
+| NIP-02 | Follow list | Implemented |
+| NIP-04 | Encrypted direct messages | Legacy, compatibility only |
+| NIP-05 | DNS-based identifiers | Displayed, not verified |
 | NIP-07 | Browser signer extension | Implemented (web) |
 | NIP-09 | Event deletion | Implemented |
+| NIP-11 | Relay information document | Implemented |
+| NIP-17 | Private direct messages | Implemented |
 | NIP-19 | bech32 entities | Implemented |
+| NIP-22 | Comments (kind:1111) | Implemented (threads) |
+| NIP-25 | Reactions | Implemented |
+| NIP-27 | Text note references and mentions | Implemented |
 | NIP-29 | Relay-based groups | Core focus |
+| NIP-30 | Custom emoji | Implemented |
 | NIP-42 | Relay authentication | Implemented |
 | NIP-44 | Versioned encryption | Implemented |
 | NIP-46 | Remote signer (bunker) | Implemented |
+| NIP-49 | Private key encryption (ncryptsec) | Implemented |
+| NIP-51 | Lists (mute list) | Implemented |
+| NIP-55 | Android signer application (Amber and compatible) | Implemented (Android) |
+| NIP-56 | Reporting | Implemented |
+| NIP-57 | Lightning zaps | Implemented (send and receive) |
+| NIP-59 | Gift wrap | Implemented |
 | NIP-65 | Relay list metadata | Implemented |
+| NIP-92 | Media attachments (imeta tags) | Implemented |
+| NIP-78 | Application-specific data | Implemented |
+| NIP-84 | Highlights | Implemented |
+| NIP-96 | HTTP file storage | Implemented |
+| NIP-98 | HTTP authentication | Implemented |
 
 ## Why Nostrord?
 
@@ -136,16 +206,22 @@ Nostrord uses Kotlin Multiplatform (KMP) with Compose Multiplatform for UI, shar
 ### vs Other Nostr Clients
 
 - Purpose-built for NIP-29 groups, not general Nostr
+- Channels, threads, encrypted DMs, zaps and live audio and video spaces in one client
 - Kotlin Multiplatform (true native, not Electron)
-- Compose UI for consistent feel across platforms
+- Compose UI on the native apps, a React DOM UI on the web, both on the same shared Kotlin core
 - Open source under the Unlicense (public domain)
 
 ## Platform Support
 
 - Web: https://web.nostrord.com/ (live beta)
-- Android: native APK, planned Google Play listing
-- Desktop: Windows, macOS, Linux via JVM
+- Android: native APK on GitHub Releases (Google Play listing planned)
+- Windows: MSI installer on GitHub Releases (x64)
+- macOS: DMG on GitHub Releases (Apple Silicon; Intel build planned)
+- Linux: .deb and .rpm packages on GitHub Releases plus `nostrord-bin` on the AUR (x64; AppImage and other distros planned)
 - iOS: native via Compose Multiplatform (in development)
+
+Downloads hub: https://nostrord.com/download/ (auto-detects platform, always serves latest release)
+Releases: https://github.com/nostrord/nostrord/releases
 
 ## Funding
 

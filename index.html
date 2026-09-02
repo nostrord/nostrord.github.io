@@ -1,19 +1,19 @@
 ---
 layout: page
 title: "Nostrord - Decentralized Group Chat · NIP-29 Nostr Client"
-description: "Nostrord is a NIP-29 client for decentralized group chat on Nostr. Built with Kotlin Multiplatform (KMP) and Compose. Relay-enforced moderation, censorship-resistant communities, cryptographic identity. No servers, no sign-up, no lock-in."
-keywords: "Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat, Nostr client, relay-managed groups, open source chat, Nostr communities, Kotlin Multiplatform, KMP, Compose Multiplatform"
+description: "Nostrord is a NIP-29 client for decentralized group chat on Nostr. Censorship-resistant communities with threads, relay-enforced moderation, encrypted DMs, and Lightning zaps, plus live audio and video on relays that support it. No servers, no sign-up, no lock-in."
+keywords: "Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat, Nostr client, relay-managed groups, open source chat, Nostr communities, encrypted DMs, Lightning zaps, Nostr Google login, group channels, live audio spaces, Kotlin Multiplatform, KMP, Compose Multiplatform"
 nav_home: true
 structured_data:
   "@context": "https://schema.org"
   "@type": "SoftwareApplication"
   name: "Nostrord"
   applicationCategory: "CommunicationApplication"
-  operatingSystem: "Web, Android, iOS, Windows, macOS, Linux"
-  description: "NIP-29 client for decentralized group chat on Nostr. Built with Kotlin Multiplatform (KMP) and Compose. Relay-enforced moderation, censorship-resistant communities, and cryptographic identity. No sign-up required."
+  operatingSystem: "Web, Android, Windows, macOS, Linux"
+  description: "NIP-29 client for decentralized group chat on Nostr. Groups with threads and relay-enforced moderation, plus encrypted DMs and Lightning zaps. Sign in with a key you own or a remote signer."
   url: "https://nostrord.com/"
   downloadUrl: "https://nostrord.com/download/"
-  softwareVersion: "beta"
+  softwareVersion: "2.10.1"
   license: "https://github.com/nostrord/nostrord/blob/main/LICENSE"
   sameAs:
     - "https://github.com/nostrord/nostrord"
@@ -22,7 +22,7 @@ structured_data:
     "@type": "Offer"
     price: "0"
     priceCurrency: "USD"
-  keywords: "Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat"
+  keywords: "Nostr group chat, NIP-29 client, decentralized group chat, censorship resistant chat, encrypted DMs, Lightning zaps"
 ---
 
   <!-- Hero -->
@@ -33,7 +33,7 @@ structured_data:
           <div class="hero-tag">NIP-29 Decentralized Group Chat</div>
           <h1>Own your <span>communities</span></h1>
           <p class="hero-desc">
-            Nostrord is a NIP-29 client for decentralized group chat on Nostr. Create censorship-resistant communities on any relay with admin roles, moderation, and access control built in. Your account is a cryptographic key you own, not a username on a server.
+            Nostrord is a NIP-29 client for decentralized group chat on Nostr. Create censorship-resistant communities on the relay of your choice, with threads, admin controls, and moderation that sticks. Send encrypted DMs, zap over Lightning, and open live audio and video rooms where the relay supports them. Your account is a cryptographic key you own, not a username on a server.
           </p>
           <div class="hero-buttons">
             <a href="/open/" class="btn btn-primary">
@@ -97,8 +97,8 @@ structured_data:
           <div class="stat-label">Tracking</div>
         </div>
         <div class="stat">
-          <div class="stat-value"><span>&#8734;</span></div>
-          <div class="stat-label">Relays Supported</div>
+          <div class="stat-value"><span>Any</span></div>
+          <div class="stat-label">NIP-29 Relay</div>
         </div>
       </div>
     </div>
@@ -119,7 +119,7 @@ structured_data:
             </svg>
           </div>
           <h3>Censorship Resistant</h3>
-          <p>No company can ban your community or delete your messages. Groups live on independent relays you choose, and you can always move to another one. Your voice, your rules.</p>
+          <p>No single company owns the network or the account you post with. Groups live on independent relays you choose, and if a relay turns hostile you can stand your community up on another one.</p>
         </div>
         <div class="why-card">
           <div class="why-icon">
@@ -128,7 +128,7 @@ structured_data:
             </svg>
           </div>
           <h3>Instant Account</h3>
-          <p>Generate a key and start chatting in seconds. No email, no phone number, no verification. Your account is a cryptographic key, not a form to fill.</p>
+          <p>Generate a key and start chatting in seconds. No email, no phone number, no verification, nothing to approve. Your account is a key, not a form to fill.</p>
         </div>
         <div class="why-card">
           <div class="why-icon">
@@ -138,7 +138,7 @@ structured_data:
             </svg>
           </div>
           <h3>Interoperable</h3>
-          <p>Your groups and messages are standard Nostr events, visible in any NIP-29 client. Use Nostrord today, switch to Flotilla, 0xChat, or Chachi tomorrow. Your data follows you, not the app.</p>
+          <p>Your groups and chat messages are standard Nostr events, readable in any NIP-29 client, like Flotilla, 0xChat, or Chachi. Your data follows you, not the app.</p>
         </div>
       </div>
     </div>
@@ -148,8 +148,8 @@ structured_data:
   <section class="bento" id="features">
     <div class="container">
       <div class="bento-header">
-        <h2>Everything a censorship-resistant group chat needs</h2>
-        <p>Relay-enforced moderation, cryptographic identity, and open source code</p>
+        <h2>What Nostrord does</h2>
+        <p>Moderation that sticks, cryptographic identity, and open source code</p>
       </div>
       <div class="bento-grid">
         <!-- Wide card: Protocol -->
@@ -164,16 +164,26 @@ structured_data:
           <div class="nip-badges">
             <span class="nip-badge primary">NIP-29</span>
             <span class="nip-badge">NIP-01</span>
+            <span class="nip-badge">NIP-02</span>
             <span class="nip-badge">NIP-07</span>
             <span class="nip-badge">NIP-09</span>
             <span class="nip-badge">NIP-11</span>
+            <span class="nip-badge">NIP-17</span>
             <span class="nip-badge">NIP-19</span>
+            <span class="nip-badge">NIP-22</span>
+            <span class="nip-badge">NIP-25</span>
             <span class="nip-badge">NIP-27</span>
+            <span class="nip-badge">NIP-30</span>
             <span class="nip-badge">NIP-42</span>
             <span class="nip-badge">NIP-44</span>
             <span class="nip-badge">NIP-46</span>
+            <span class="nip-badge">NIP-49</span>
+            <span class="nip-badge">NIP-51</span>
+            <span class="nip-badge">NIP-55</span>
             <span class="nip-badge">NIP-57</span>
+            <span class="nip-badge">NIP-59</span>
             <span class="nip-badge">NIP-65</span>
+            <span class="nip-badge">NIP-92</span>
             <span class="nip-badge">NIP-98</span>
           </div>
         </div>
@@ -187,7 +197,7 @@ structured_data:
             </svg>
           </div>
           <h3>Your Keys, Your Account</h3>
-          <p>A Nostr account is a cryptographic key you control. Your profile and messages live on relays, but your identity is yours alone. No relay can revoke it or impersonate you. Generate a new key to sign up, or sign in with an existing account via browser extension, remote signer, or by pasting your key directly.</p>
+          <p>A Nostr account is a cryptographic key you control. Your profile and messages live on relays, but no relay can revoke your account or impersonate you. Generate a new key to sign up, or sign in with an existing account via a browser extension on web, a remote signer, Google, or by pasting your key directly. Add as many accounts as you like and switch between them in one tap.</p>
           <div class="code-block">
             <pre>{
   <span class="code-key">"pubkey"</span>: <span class="code-string">"a1b2c3..."</span>,
@@ -209,7 +219,7 @@ structured_data:
             </svg>
           </div>
           <h3>NIP-29 Groups</h3>
-          <p>Create groups, send invite codes, review join requests, promote or remove members, and edit group metadata. As an admin, you control roles, access, and visibility on the relay you choose.</p>
+          <p>Create a group on a relay that allows it, and decide who gets in. Send invite codes, review join requests, promote or remove admins, and edit group metadata. Open forum-style threads for longer discussions, and split bigger communities into channels on relays that support the proposed subgroups extension.</p>
         </div>
 
         <div class="bento-card">
@@ -221,7 +231,7 @@ structured_data:
             </svg>
           </div>
           <h3>Remote Signer</h3>
-          <p>Sign in with a NIP-46 bunker via URL or QR code. Your private keys stay on a dedicated signing device and never touch the app. Full support for Nostr Connect.</p>
+          <p>Sign in with a NIP-46 bunker: paste a bunker URL, or let Nostrord show a Nostr Connect QR code for your signer to scan. On Android you can also sign with Amber or another NIP-55 signer. Your private key stays in the signer and never touches the app.</p>
         </div>
 
         <div class="bento-card">
@@ -231,7 +241,28 @@ structured_data:
             </svg>
           </div>
           <h3>Rich Messaging</h3>
-          <p>Replies, @mentions, emoji reactions, and media uploads. All sent as cryptographically signed Nostr events.</p>
+          <p>Reply to a message, mention people, react with emoji, and share images, video, and audio uploaded to any Blossom server you add, or a NIP-96 host from the built-in list. Zap any message from someone with a Lightning address.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h3>Encrypted DMs</h3>
+          <p>Direct messages use NIP-17 gift wrap with NIP-44 encryption, so content and metadata stay sealed between you and the recipient. Reply, react, and send encrypted file attachments through the DM relays you pick.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <h3>Lightning Zaps</h3>
+          <p>Zap any message or profile with NIP-57, as long as the recipient has a Lightning address. You pay from your own wallet, by QR code or a single tap. No custody, no platform fee.</p>
         </div>
 
         <div class="bento-card">
@@ -242,7 +273,7 @@ structured_data:
             </svg>
           </div>
           <h3>Multiplatform</h3>
-          <p>Built with Kotlin Multiplatform (KMP) and Compose. Runs in any modern browser, with native apps available for Android, Windows, macOS, and Linux. iOS in development.</p>
+          <p>Built with Kotlin Multiplatform (KMP): one shared Nostr core, with Compose on the native apps and a React UI on the web. Runs in any modern browser and as native apps for Android, Windows, macOS, and Linux. iOS in development.</p>
         </div>
 
         <div class="bento-card">
@@ -253,7 +284,20 @@ structured_data:
             </svg>
           </div>
           <h3>Notifications &amp; Unread</h3>
-          <p>Per-group unread state across sessions, with focus-aware muting for the conversation you're reading. Browser notifications and tab-title badges on web.</p>
+          <p>Per-group unread state that follows you across sessions. The conversation you have open stays quiet, since you are already reading it. Browser notifications on web.</p>
+        </div>
+
+        <div class="bento-card">
+          <div class="bento-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" y1="19" x2="12" y2="23"/>
+              <line x1="8" y1="23" x2="16" y2="23"/>
+            </svg>
+          </div>
+          <h3>Live Audio &amp; Video</h3>
+          <p>On relays that run a LiveKit companion, like pyramid.fiatjaf.com, a group can host a live audio and video room. See who is already talking and drop in from the web app, Android, or desktop.</p>
         </div>
       </div>
     </div>
@@ -264,7 +308,7 @@ structured_data:
     <div class="container">
       <div class="platforms-header">
         <h2>Available Everywhere</h2>
-        <p>Web, Android, Windows, macOS and Linux available now. iOS in development.</p>
+        <p>Web, Android, Windows, macOS and Linux available now, from one shared codebase. iOS in development.</p>
       </div>
       <div class="platform-grid">
         <a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="platform-card platform-card-live">
@@ -337,7 +381,7 @@ structured_data:
             <path fill="currentColor" stroke="none" d="M14.923 8.080c-0.025 0.072-0.141 0.061-0.207 0.082-0.059 0.031-0.107 0.085-0.175 0.085-0.062 0-0.162-0.025-0.17-0.085-0.012-0.082 0.11-0.166 0.187-0.166 0.050-0.024 0.108-0.037 0.169-0.037 0.056 0 0.109 0.011 0.157 0.032l-0.003-0.001c0.022 0.009 0.038 0.030 0.038 0.055 0 0.003-0 0.005-0.001 0.008l0-0v0.025h0.004zM15.611 8.080v-0.027c-0.008-0.025 0.016-0.052 0.036-0.062 0.046-0.020 0.1-0.032 0.157-0.032 0.061 0 0.119 0.014 0.17 0.038l-0.002-0.001c0.079 0 0.2 0.084 0.187 0.169-0.007 0.061-0.106 0.082-0.169 0.082-0.069 0-0.115-0.054-0.176-0.085-0.065-0.023-0.182-0.010-0.204-0.081zM16.963 10.058c-0.532 0.337-1.161 0.574-1.835 0.666l-0.024 0.003c-0.606-0.035-1.157-0.248-1.607-0.588l0.007 0.005c-0.192-0.167-0.35-0.335-0.466-0.419-0.205-0.167-0.18-0.416-0.092-0.416 0.136 0.020 0.161 0.167 0.249 0.25 0.12 0.082 0.269 0.25 0.45 0.416 0.397 0.328 0.899 0.541 1.45 0.583l0.009 0.001c0.654-0.057 1.249-0.267 1.763-0.592l-0.016 0.010c0.244-0.169 0.556-0.417 0.81-0.584 0.195-0.17 0.186-0.334 0.349-0.334 0.16 0.020 0.043 0.167-0.184 0.415-0.246 0.188-0.527 0.381-0.818 0.56l-0.044 0.025zM8.017 21.397h0.012c0.069 0 0.137 0.007 0.203 0.019l-0.007-0.001c0.544 0.14 0.992 0.478 1.273 0.931l0.005 0.009 1.137 2.079 0.004 0.004c0.457 0.773 0.948 1.442 1.497 2.059l-0.011-0.013c0.49 0.52 0.82 1.196 0.909 1.946l0.002 0.016v0.008c-0.012 0.817-0.613 1.491-1.396 1.616l-0.009 0.001c-0.2 0.031-0.432 0.048-0.667 0.048-0.857 0-1.659-0.233-2.347-0.64l0.021 0.012c-1.053-0.441-2.275-0.714-3.555-0.752l-0.015-0c-0.372-0.025-0.696-0.215-0.901-0.496l-0.002-0.003c-0.054-0.174-0.085-0.374-0.085-0.582 0-0.35 0.088-0.679 0.244-0.966l-0.005 0.011v-0.005l0.003-0.004c0.041-0.188 0.065-0.405 0.065-0.627 0-0.274-0.036-0.539-0.104-0.791l0.005 0.021c-0.041-0.15-0.065-0.323-0.065-0.502 0-0.242 0.043-0.473 0.123-0.687l-0.004 0.014c0.2-0.417 0.495-0.5 0.862-0.666 0.438-0.133 0.819-0.334 1.151-0.593l-0.008 0.006h0.002v-0.003c0.32-0.335 0.556-0.751 0.835-1.047 0.195-0.249 0.492-0.41 0.827-0.42l0.002-0zM21.531 21.336c-0.001 0.017-0.001 0.038-0.001 0.059 0 0.743 0.449 1.381 1.091 1.658l0.012 0.005c0.048 0.003 0.104 0.005 0.16 0.005 0.831 0 1.575-0.371 2.075-0.957l0.003-0.004 0.264-0.012c0.053-0.008 0.114-0.012 0.176-0.012 0.341 0 0.652 0.132 0.883 0.348l-0.001-0.001 0.004 0.004c0.249 0.301 0.422 0.673 0.487 1.082l0.002 0.013c0.055 0.505 0.238 0.96 0.517 1.34l-0.005-0.008c0.416 0.356 0.705 0.85 0.793 1.411l0.002 0.013 0.004-0.009v0.022l-0.004-0.015c-0.019 0.327-0.231 0.495-0.622 0.744-1.184 0.497-2.201 1.158-3.077 1.968l0.007-0.006c-0.608 0.792-1.501 1.339-2.523 1.486l-0.021 0.002c-0.074 0.010-0.16 0.016-0.247 0.016-0.768 0-1.428-0.464-1.716-1.126l-0.005-0.012-0.006-0.004c-0.093-0.286-0.146-0.615-0.146-0.956 0-0.416 0.079-0.813 0.224-1.178l-0.008 0.022c0.234-0.668 0.435-1.466 0.568-2.288l0.011-0.083c0.016-0.812 0.104-1.593 0.258-2.35l-0.014 0.083c0.085-0.518 0.381-0.954 0.794-1.225l0.007-0.004 0.056-0.027zM18.8 10.142c0.6 2.147 1.339 4.002 2.247 5.757l-0.079-0.167c0.613 1.090 1.090 2.355 1.363 3.695l0.014 0.084c0.009-0 0.020-0 0.031-0 0.217 0 0.427 0.029 0.627 0.084l-0.017-0.004c0.11-0.395 0.173-0.848 0.173-1.316 0-1.426-0.587-2.716-1.533-3.639l-0.001-0.001c-0.275-0.25-0.29-0.419-0.154-0.419 0.971 0.91 1.689 2.078 2.045 3.394l0.012 0.051c0.089 0.329 0.14 0.707 0.14 1.097 0 0.351-0.041 0.693-0.119 1.020l0.006-0.030c0.074 0.038 0.16 0.067 0.251 0.083l0.006 0.001c1.29 0.667 1.766 1.172 1.537 1.921v-0.054c-0.075-0.004-0.15 0-0.225 0h-0.020c0.189-0.584-0.227-1.031-1.331-1.53-1.143-0.5-2.057-0.42-2.212 0.581-0.011 0.049-0.019 0.106-0.022 0.165l-0 0.003c-0.073 0.030-0.16 0.058-0.25 0.078l-0.011 0.002c-0.508 0.336-0.87 0.859-0.989 1.469l-0.002 0.014c-0.148 0.695-0.241 1.5-0.256 2.323l-0 0.012v0.004c-0.091 0.637-0.23 1.207-0.418 1.753l0.020-0.066c-0.983 0.804-2.251 1.29-3.634 1.29-1.13 0-2.184-0.325-3.073-0.887l0.024 0.014c-0.146-0.253-0.313-0.472-0.503-0.667l0.001 0.001c-0.097-0.16-0.211-0.297-0.342-0.415l-0.002-0.001c0.207-0 0.407-0.031 0.596-0.088l-0.015 0.004c0.18-0.085 0.318-0.232 0.391-0.412l0.002-0.005c0.018-0.093 0.029-0.199 0.029-0.308 0-0.445-0.175-0.848-0.461-1.146l0.001 0.001c-0.619-0.761-1.359-1.395-2.196-1.88l-0.038-0.020c-0.671-0.388-1.179-0.995-1.43-1.722l-0.007-0.022c-0.093-0.318-0.147-0.684-0.147-1.062 0-0.353 0.047-0.695 0.134-1.021l-0.006 0.027c0.377-1.314 0.921-2.461 1.62-3.496l-0.028 0.043c0.134-0.081 0.046 0.169-0.51 1.217-0.474 0.713-0.757 1.59-0.757 2.533 0 0.84 0.224 1.627 0.616 2.306l-0.012-0.022c0.052-1.309 0.345-2.537 0.834-3.659l-0.025 0.065c1.055-1.902 1.854-4.111 2.275-6.452l0.020-0.131c0.060 0.045 0.271 0.169 0.361 0.252 0.272 0.166 0.475 0.416 0.737 0.581 0.267 0.26 0.633 0.42 1.035 0.42 0.021 0 0.042-0 0.063-0.001l-0.003 0c0.049 0.004 0.094 0.008 0.137 0.008 0.459-0.009 0.887-0.132 1.259-0.342l-0.013 0.007c0.362-0.167 0.65-0.417 0.925-0.5h0.006c0.535-0.145 0.983-0.454 1.3-0.869l0.004-0.006zM15.301 7.465c0.003 0 0.006-0 0.009-0 0.569 0 1.094 0.187 1.517 0.503l-0.007-0.005c0.378 0.234 0.814 0.433 1.275 0.574l0.040 0.010h0.004c0.246 0.11 0.449 0.281 0.594 0.494l0.003 0.005v-0.164c0.046 0.092 0.074 0.201 0.074 0.316 0 0.098-0.020 0.191-0.055 0.276l0.002-0.005c-0.288 0.507-0.755 0.884-1.313 1.048l-0.016 0.004v0.002c-0.335 0.169-0.626 0.416-0.968 0.581-0.35 0.21-0.771 0.334-1.222 0.334-0.015 0-0.030-0-0.045-0l0.002 0c-0.022 0.001-0.048 0.002-0.074 0.002-0.174 0-0.342-0.031-0.496-0.089l0.010 0.003c-0.159-0.087-0.29-0.169-0.417-0.257l0.014 0.010c-0.227-0.199-0.477-0.39-0.739-0.565l-0.026-0.016v-0.006h-0.006c-0.375-0.199-0.67-0.504-0.852-0.876l-0.005-0.012c-0.027-0.067-0.042-0.145-0.042-0.226 0-0.218 0.112-0.41 0.281-0.522l0.002-0.001c0.28-0.169 0.475-0.339 0.604-0.42 0.13-0.092 0.179-0.127 0.22-0.164h0.002v-0.004c0.268-0.339 0.623-0.599 1.032-0.746l0.016-0.005c0.174-0.050 0.374-0.079 0.581-0.081h0.001zM13.589 5.333h0.045c0.188 0.004 0.361 0.067 0.501 0.17l-0.002-0.002c0.179 0.159 0.325 0.352 0.425 0.57l0.004 0.011c0.113 0.245 0.183 0.53 0.191 0.83l0 0.003v0.005c0.004 0.046 0.006 0.099 0.006 0.152 0 0.063-0.003 0.126-0.009 0.188l0.001-0.008v0.1c-0.037 0.009-0.070 0.022-0.104 0.030-0.191 0.079-0.352 0.163-0.505 0.258l0.014-0.008c0.008-0.055 0.012-0.118 0.012-0.182 0-0.053-0.003-0.106-0.009-0.158l0.001 0.006v-0.019c-0.018-0.154-0.054-0.295-0.107-0.428l0.004 0.011c-0.041-0.132-0.113-0.244-0.207-0.333l-0-0c-0.055-0.050-0.128-0.081-0.209-0.081-0.007 0-0.014 0-0.021 0.001l0.001-0h-0.026c-0.103 0.011-0.189 0.075-0.232 0.163l-0.001 0.002c-0.077 0.093-0.13 0.208-0.15 0.334l-0 0.004c-0.023 0.086-0.035 0.185-0.035 0.287 0 0.044 0.002 0.088 0.007 0.131l-0-0.005v0.019c0.016 0.154 0.052 0.296 0.104 0.428l-0.004-0.011c0.042 0.132 0.113 0.245 0.207 0.335l0 0c0.012 0.012 0.026 0.022 0.042 0.030l0.001 0c-0.083 0.053-0.155 0.109-0.221 0.171l0.001-0.001c-0.045 0.040-0.1 0.070-0.161 0.084l-0.003 0.001c-0.123-0.147-0.237-0.312-0.335-0.486l-0.008-0.016c-0.113-0.245-0.183-0.529-0.194-0.83l-0-0.004c-0.004-0.048-0.006-0.104-0.006-0.161 0-0.241 0.039-0.473 0.11-0.69l-0.004 0.016c0.074-0.258 0.195-0.481 0.356-0.671l-0.002 0.003c0.127-0.15 0.313-0.245 0.522-0.25h0.001zM17.291 5.259h0.016c0.001 0 0.002 0 0.004 0 0.275 0 0.527 0.093 0.729 0.249l-0.003-0.002c0.229 0.177 0.413 0.4 0.542 0.655l0.005 0.011c0.121 0.266 0.196 0.575 0.207 0.901l0 0.004c0-0.025 0.007-0.050 0.007-0.075v0.131l-0.005-0.026-0.005-0.030c-0.003 0.32-0.071 0.622-0.193 0.897l0.006-0.014c-0.062 0.163-0.152 0.303-0.266 0.419l0-0c-0.030-0.018-0.067-0.035-0.104-0.050l-0.006-0.002c-0.135-0.042-0.253-0.099-0.36-0.169l0.005 0.003c-0.077-0.032-0.169-0.060-0.264-0.081l-0.011-0.002c0.081-0.076 0.156-0.157 0.225-0.243l0.004-0.005c0.063-0.148 0.102-0.319 0.11-0.499l0-0.003v-0.025c0-0.008 0-0.016 0-0.025 0-0.17-0.028-0.333-0.080-0.485l0.003 0.011c-0.063-0.159-0.14-0.296-0.232-0.421l0.004 0.005c-0.087-0.088-0.202-0.148-0.331-0.165l-0.003-0h-0.020c-0.001 0-0.003-0-0.004-0-0.132 0-0.25 0.065-0.322 0.164l-0.001 0.001c-0.116 0.113-0.204 0.253-0.254 0.41l-0.002 0.007c-0.063 0.147-0.104 0.318-0.112 0.496l-0 0.003v0.024c0.002 0.12 0.011 0.236 0.027 0.349l-0.002-0.015c-0.241-0.084-0.547-0.169-0.759-0.252-0.012-0.073-0.020-0.159-0.022-0.247l-0-0.003v-0.025c-0.001-0.020-0.001-0.043-0.001-0.066 0-0.324 0.069-0.631 0.194-0.908l-0.006 0.014c0.106-0.279 0.293-0.508 0.532-0.663l0.005-0.003c0.204-0.156 0.462-0.25 0.742-0.25h0zM16.63 1.004c-0.194 0-0.394 0.010-0.6 0.026-5.281 0.416-3.88 6.007-3.961 7.87-0.050 1.426-0.534 2.729-1.325 3.792l0.013-0.018c-1.407 1.602-2.555 3.474-3.351 5.523l-0.043 0.127c-0.258 0.685-0.408 1.476-0.408 2.302 0 0.285 0.018 0.566 0.052 0.841l-0.003-0.033c-0.056 0.046-0.103 0.102-0.136 0.166l-0.001 0.003c-0.325 0.335-0.562 0.75-0.829 1.048-0.283 0.217-0.615 0.388-0.975 0.494l-0.021 0.005c-0.464 0.139-0.842 0.442-1.075 0.841l-0.005 0.009c-0.104 0.212-0.165 0.461-0.165 0.725 0 0.010 0 0.019 0 0.029l-0-0.001c0.002 0.238 0.026 0.469 0.073 0.693l-0.004-0.023c0.056 0.219 0.088 0.471 0.088 0.73 0 0.17-0.014 0.337-0.041 0.5l0.002-0.018c-0.167 0.313-0.264 0.685-0.264 1.080 0 0.278 0.048 0.544 0.137 0.791l-0.005-0.016c0.273 0.388 0.686 0.662 1.164 0.749l0.011 0.002c1.274 0.107 2.451 0.373 3.561 0.78l-0.094-0.030c0.698 0.415 1.539 0.66 2.436 0.66 0.294 0 0.582-0.026 0.862-0.077l-0.029 0.004c0.667-0.151 1.211-0.586 1.504-1.169l0.006-0.013c0.734-0.004 1.537-0.336 2.824-0.417 0.873-0.072 1.967 0.334 3.22 0.25 0.037 0.159 0.086 0.298 0.148 0.429l-0.006-0.013 0.004 0.004c0.384 0.804 1.19 1.35 2.124 1.35 0.081 0 0.161-0.004 0.24-0.012l-0.010 0.001c1.151-0.17 2.139-0.768 2.813-1.623l0.007-0.009c0.843-0.768 1.827-1.401 2.905-1.853l0.067-0.025c0.432-0.191 0.742-0.585 0.81-1.059l0.001-0.007c-0.059-0.694-0.392-1.299-0.888-1.716l-0.004-0.003v-0.121l-0.004-0.004c-0.214-0.33-0.364-0.722-0.421-1.142l-0.002-0.015c-0.053-0.513-0.278-0.966-0.615-1.307l0 0h-0.004c-0.074-0.067-0.154-0.084-0.235-0.169-0.066-0.047-0.148-0.076-0.237-0.080l-0.001-0c0.195-0.602 0.308-1.294 0.308-2.013 0-0.94-0.193-1.835-0.541-2.647l0.017 0.044c-0.704-1.672-1.619-3.111-2.732-4.369l0.014 0.017c-1.105-1.082-1.828-2.551-1.948-4.187l-0.001-0.021c0.033-2.689 0.295-7.664-4.429-7.671z"/>
           </svg>
           <h4>Linux</h4>
-          <p>Debian &middot; Fedora &middot; Arch</p>
+          <p>AppImage &middot; Debian &middot; Fedora &middot; Arch</p>
           <span class="download-badge">Download</span>
         </a>
       </div>
@@ -356,13 +400,13 @@ structured_data:
       <div class="built-with-grid">
         <div class="built-with-item">
           <svg class="built-with-logo" viewBox="0 0 24 24" fill="#7F52FF"><path d="M24 24H0V0h24L12 12Z"/></svg>
-          <span class="built-with-name">Kotlin</span>
-          <span class="built-with-desc">WebAssembly</span>
+          <span class="built-with-name">Kotlin Multiplatform</span>
+          <span class="built-with-desc">One shared core</span>
         </div>
         <div class="built-with-item">
           <svg class="built-with-logo" viewBox="0 0 24 24" fill="#4285F4"><path d="M12.135.003a2.577 2.577 0 0 0-1.42.344L2.55 5.06a2.577 2.577 0 0 0-.953.967l3.957 2.17a1.765 1.765 0 0 1 .603-.588l4.951-2.86a1.761 1.761 0 0 1 1.76 0l4.951 2.86a1.753 1.753 0 0 1 .526.46l3.921-2.265a2.577 2.577 0 0 0-.816-.744L13.291.347a2.577 2.577 0 0 0-1.152-.34Zm-.145 4.912a1.36 1.36 0 0 0-.68.182L6.36 7.953a1.345 1.345 0 0 0-.454.435l1.92 1.055a1.05 1.05 0 0 1 .31-.275l3.34-1.928a1.054 1.054 0 0 1 1.051 0l3.336 1.928a1.066 1.066 0 0 1 .238.199l.018-.01-.002-.002 1.877-1.08a1.353 1.353 0 0 0-.373-.322l-4.95-2.86a1.357 1.357 0 0 0-.68-.178Zm10.432 1.149-3.92 2.26a1.757 1.757 0 0 1 .2.812v5.715c0 .627-.332 1.21-.88 1.528l-4.95 2.86a1.761 1.761 0 0 1-.64.214v4.524a2.577 2.577 0 0 0 1.059-.313l8.162-4.713a2.577 2.577 0 0 0 1.289-2.23V7.297a2.577 2.577 0 0 0-.318-1.228Zm-20.937.238a2.577 2.577 0 0 0-.227.99v9.43c0 .918.491 1.767 1.293 2.229l8.162 4.713a2.57 2.57 0 0 0 1.225.336v-4.531a1.761 1.761 0 0 1-.833-.235L6.156 16.38a1.765 1.765 0 0 1-.877-1.528V9.136a1.776 1.776 0 0 1 .131-.676Zm16.67 2.223-1.89 1.092a1.058 1.058 0 0 1 .124.46v3.856c0 .378-.2.72-.526.907l-3.336 1.93a1.04 1.04 0 0 1-.295.107v2.17c.152-.027.304-.078.44-.157l4.949-2.859a1.36 1.36 0 0 0 .68-1.18V9.136a1.36 1.36 0 0 0-.147-.607Zm-12.387.13a1.36 1.36 0 0 0-.088.481v5.715a1.36 1.36 0 0 0 .68 1.18l4.95 2.86c.194.112.412.166.627.177v-2.174a1.054 1.054 0 0 1-.46-.123L8.14 14.843a1.054 1.054 0 0 1-.532-.908v-3.853a.99.99 0 0 1 .077-.38l-.034-.013z"/></svg>
-          <span class="built-with-name">Compose for Web</span>
-          <span class="built-with-desc">Declarative UI</span>
+          <span class="built-with-name">Compose Multiplatform</span>
+          <span class="built-with-desc">Declarative UI on native</span>
         </div>
         <div class="built-with-item">
           <svg class="built-with-logo" viewBox="0 0 24 24" fill="#087CFA"><path d="M8 0 0 8l8 8V8h8zm8 8v8H8l8 8 8-8z"/></svg>
@@ -379,7 +423,7 @@ structured_data:
         <span class="compatible-label">Compatible NIP-29 Relays</span>
         <div class="relay-list">
           <span class="relay-badge">wss://groups.fiatjaf.com</span>
-          <span class="relay-badge">wss://relay.groups.nip29.com</span>
+          <span class="relay-badge">wss://spatia-arcana.com</span>
           <span class="relay-badge">wss://groups.0xchat.com</span>
           <span class="relay-badge">wss://pyramid.fiatjaf.com</span>
           <span class="relay-badge">+ any NIP-29 relay</span>
@@ -423,7 +467,7 @@ structured_data:
       <div class="faq-list">
         <details class="faq-item">
           <summary>What is NIP-29?</summary>
-          <p>NIP-29 is a Nostr specification for relay-managed groups. Each group lives on a relay and has a unique ID. The relay enforces membership, roles, and moderation. Admins can remove members or messages, and the relay rejects unauthorized events. Unlike Discord servers, no single company owns the infrastructure.</p>
+          <p>NIP-29 is a Nostr specification for relay-managed groups. Each group lives on a relay and has a unique ID. The relay enforces membership, roles, and moderation. Admins can remove members or messages, and the relay rejects unauthorized events. Unlike Discord, where one company owns every server and your account, each relay has its own operator, and none of them owns your identity: your key, your contacts and your other groups do not live there.</p>
         </details>
         <details class="faq-item">
           <summary>How is this different from Discord?</summary>
@@ -431,27 +475,35 @@ structured_data:
         </details>
         <details class="faq-item">
           <summary>How do I create an account?</summary>
-          <p>Your Nostr account is a cryptographic key you control. To sign up, generate a new key directly in the app. No email, no phone, no verification. Already have a Nostr account? Sign in with a browser extension (NIP-07), a remote signer (NIP-46), or paste your key directly.</p>
+          <p>Your Nostr account is a cryptographic key you control. To sign up, generate a new key directly in the app. No email, no phone, no verification. You can also sign in with Google: Nostrord creates a Nostr key for you through a threshold signer, and you can export it from Settings whenever you need it, as long as the signer operators are reachable. Signing in with Google links your email address to your public key: the coordinator and each shard operator store both together. If you want no link between the two, generate a key instead. Already have a Nostr account? Sign in with a browser extension (NIP-07), a remote signer (NIP-46), an external signer app on Android such as Amber (NIP-55), or paste your key directly.</p>
         </details>
         <details class="faq-item">
           <summary>Where are my keys stored?</summary>
-          <p>Your keys stay on your device, but the level of protection varies by platform. Android uses the hardware-backed system Keystore (AES-256-GCM). Desktop tries the OS keychain first (Credential Manager on Windows, Keychain Access on macOS, libsecret or kwallet on Linux) and falls back to a passphrase you set if the keychain is not available; either way, no raw key is stored next to the ciphertext. Web stores them in plain localStorage with no additional encryption. On web we strongly recommend a NIP-46 remote signer (bunker) or a NIP-07 browser extension; with NIP-46 your key stays on a separate device and the app only ever sees signed events.</p>
+          <p>Your keys stay on your device, but the level of protection varies by platform. Android uses the system Keystore (AES-256-GCM), hardware-backed on devices that support it. Desktop tries the OS keychain first (Credential Manager on Windows, Keychain Access on macOS, the Secret Service that GNOME Keyring and KWallet provide on Linux) and falls back to a passphrase you set if the keychain is not available. Once one of them is in place, the nsec sits encrypted and what unlocks it is not stored alongside: it is held by the OS keychain, or derived from a passphrase that only you know. Web stores them in localStorage, unencrypted unless you pick the password-protected option at login. On web we strongly recommend a NIP-46 remote signer (bunker) or a NIP-07 browser extension; with NIP-46 your key stays on a separate device and the app only ever sees signed events. Keys can be imported and exported as password-protected ncryptsec (NIP-49). If you sign in with Google, your identity key is never stored in your browser: it is split into shards held by separately operated signer services, and signing runs over NIP-46 through a coordinator that needs a threshold of them. Nostrord runs none of that infrastructure and never holds your whole key. Google itself only learns that you signed in to that service, not your Nostr identity. You can export the nsec from Settings whenever you need it, as long as enough of the operators are reachable.</p>
         </details>
         <details class="faq-item">
           <summary>What relays can I use?</summary>
-          <p>Any relay that supports NIP-29. Nostrord comes pre-configured with popular options like groups.fiatjaf.com, groups.0xchat.com, and relay.groups.nip29.com. You can add, remove, or self-host any NIP-29 relay at any time. Your groups follow the relay, not the app.</p>
+          <p>Any relay that implements NIP-29. Creating a group needs a relay that allows it: some are open to anyone, others only to pubkeys the operator has authorized, and some handle creation on their own site. A relay hosts groups, but Nostrord does not put everything on it in front of you: you find groups through the people you follow, a recommended list, or an invite link, so what surfaces is what your own network is in. Your groups live on the relay, not in the app, so they stay reachable from any NIP-29 client.</p>
         </details>
         <details class="faq-item">
           <summary>Is Nostrord open source?</summary>
           <p>Yes, fully open source. You can audit the code, build it yourself, or contribute on GitHub. No hidden telemetry, no analytics, no tracking.</p>
         </details>
         <details class="faq-item">
-          <summary>Why Kotlin and WebAssembly?</summary>
-          <p>Kotlin Multiplatform (KMP) lets us share business logic across web, Android, iOS, and desktop from a single codebase. For the web, Kotlin compiles to WebAssembly, delivering near-native performance in the browser with Compose's declarative UI, no JavaScript overhead, no web view hacks.</p>
+          <summary>Can I send private messages?</summary>
+          <p>Yes. Nostrord has encrypted direct messages using NIP-17 gift wrap with NIP-44 encryption, so neither the content nor who is talking to whom is exposed to the relay. You can reply, react, and send encrypted file attachments, and you choose which relays carry your DMs.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I send bitcoin in Nostrord?</summary>
+          <p>Yes, through Lightning zaps (NIP-57). Zap any message or profile and Nostrord fetches the invoice, then hands it to your own Lightning wallet with a QR code or a one-tap lightning: link on any platform. Nostrord never holds your sats and takes no fee.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why Kotlin Multiplatform?</summary>
+          <p>Kotlin Multiplatform (KMP) lets us share the entire Nostr protocol layer, storage, and business logic across web, Android, iOS, and desktop from a single codebase. The native apps render that shared code with Compose Multiplatform and the web app with React, so most features land everywhere at once.</p>
         </details>
         <details class="faq-item">
           <summary>Can I use Nostrord with other Nostr clients?</summary>
-          <p>Yes. Since Nostrord uses standard Nostr events (NIP-29), your groups and messages are visible in any client that supports the same NIPs, like Flotilla, Chachi, or 0xChat.</p>
+          <p>Yes. Since Nostrord uses standard Nostr events (NIP-29), your groups and chat messages are visible in any client that supports the same NIPs, like Flotilla, Chachi, or 0xChat. Channels, threads, and live rooms use conventions that other clients may not render yet.</p>
         </details>
       </div>
     </div>
@@ -472,7 +524,7 @@ structured_data:
             </svg>
           </div>
           <h3>Chat on Nostrord</h3>
-          <p>Join the official Nostrord group on groups.0xchat.com. Talk to the devs, share feedback, or just hang out.</p>
+          <p>Join the official Nostrord group on groups.0xchat.com. Talk to the devs and share feedback.</p>
           <span class="community-action">Join Group<svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
         </a>
         <a href="https://github.com/nostrord/nostrord/issues" target="_blank" rel="noopener noreferrer" class="community-card">
@@ -484,7 +536,7 @@ structured_data:
             </svg>
           </div>
           <h3>Report Issues</h3>
-          <p>Found a bug or have a feature request? Open an issue on GitHub. Every report helps improve the app.</p>
+          <p>Found a bug or have a feature request? Open an issue on GitHub.</p>
           <span class="community-action">Open Issues<svg class="ext-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
         </a>
         <a href="https://github.com/nostrord/nostrord" target="_blank" rel="noopener noreferrer" class="community-card">
@@ -507,7 +559,7 @@ structured_data:
     <div class="container">
       <div class="cta-box">
         <h2>Your groups. Your rules.</h2>
-        <p>Create a Nostr account, pick a relay, and start building communities that no one can take from you. Open source, decentralized, sovereign.</p>
+        <p>Create a key, find a relay that fits, and start building communities that no single company controls. Open source and decentralized.</p>
         <div class="cta-buttons">
           <a href="/open/" class="btn btn-primary">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">

@@ -8,16 +8,30 @@ Nostrord is a Kotlin Multiplatform (KMP) group messaging client built on NIP-29,
 
 Your account is a cryptographic keypair you own. There is no phone number, email, or username tied to a central service. The same identity works across every Nostr app.
 
+Current release: v2.10.1
+
 ## Key Features
 
 - NIP-29 relay-based groups (create, join, manage)
-- Chat, replies, and threaded conversations
-- Moderation: admin roles, member management, message deletion
-- Relay-enforced membership and permissions
-- Multi-platform: Android, iOS, Desktop (JVM), Web (JS and WebAssembly)
+- Channels inside a group: a single-level hierarchy of kind:39000 groups linked by non-standard `parent`/`child` tags, with a sidebar tree, admin-gated creation and drag-and-drop ordering. Only shown on relays that advertise `nip29.subgroups` in their NIP-11 document, so it is unavailable on most public NIP-29 relays
+- Threads: forum-style discussions on NIP-22 kind:1111 comments, with a split view on desktop
+- Group admin tooling: invite codes, join requests review, member promotion and removal, group metadata editing
+- Chat, replies (kind:9 with a `q` tag, the NIP-C7 convention, not NIP-10 markers), and message deletion
+- Moderation: admin roles, member management, relay-enforced membership and permissions, user mute (NIP-51) synced across devices via NIP-78
+- Encrypted direct messages: NIP-17 gift wrap with NIP-44, user-configurable DM relays (kind:10050), encrypted file attachments (kind:15), reply quotes and delivery state
+- Lightning zaps (NIP-57) on messages and profiles whose author publishes a lud16/lud06. The client signs the zap request, fetches the invoice from the recipient's LNURL callback and hands it to the user's own wallet by QR code or lightning: URI. Receipts are watched on hardcoded relays (relay.damus.io, nos.lol). No custodial wallet in the app
+- Live audio and video rooms inside a group: LiveKit rooms served by a companion the relay operator runs alongside the relay (token endpoint `/.well-known/nip29/livekit/<group-id>`), with the roster published as kind:39004 (a convention, not NIP-29). Clients on web, Android and desktop. Only a handful of relays run it today, for example pyramid.fiatjaf.com
+- Inline image, video, and audio playback in chat
+- Media uploads to any Blossom server the user adds (multi-server, mirrored) or a NIP-96 host picked from a built-in list, selectable in Settings. Encrypted DM attachments fall back to blossom.jumble.social when the chosen host rejects ciphertext blobs
+- Emoji reactions with a categorized Unicode picker. Custom emoji (NIP-30) received from others are rendered inline, but the picker does not offer custom emoji to send
+- Per-group unread state with focus-aware muting. Browser notifications and tab-title badges on web only; Android, desktop and iOS play a local sound and have no system notification, no tray integration and no push
+- Discover feed: groups joined by the people you follow, ranked by how many of them are members
+- Multiple accounts with one-tap switching
+- Light and dark themes
+- Multi-platform: Android, Desktop (JVM), Web; iOS in development
 - Cryptographic identity via Nostr keys (no sign-up)
-- NIP-07 browser extension support for signing
-- NIP-46 remote signer (bunker) support
+- Sign-in options: generated key, pasted nsec, password-protected ncryptsec (NIP-49), NIP-07 browser extension, NIP-46 remote signer (bunker), an external Android signer such as Amber (NIP-55), or Login with Google
+- Login with Google: built on the promenade FROST threshold signer (Pomegranate). The key is generated client-side, split by a trusted dealer into shards held by separately operated signer services, and signing runs over NIP-46 through a coordinator (default auth.njump.me). Nostrord operates none of that infrastructure. The nsec is shown once at signup and can be exported later while a threshold of operators is reachable, never after Disconnect. Available on web, Android and desktop
 - Open source under the Unlicense
 
 ## How It Works
@@ -31,32 +45,57 @@ Your account is a cryptographic keypair you own. There is no phone number, email
 
 ## Architecture
 
-Nostrord is built with Kotlin Multiplatform and Compose Multiplatform. Shared business logic in commonMain runs on all platforms; platform-specific code handles crypto, secure storage, and browser integration.
+Nostrord is built with Kotlin Multiplatform. Shared business logic in commonMain runs on all platforms; native apps use Compose Multiplatform, the web app is a Kotlin/JS build with a React DOM UI. Platform-specific code handles crypto, secure storage, and browser integration.
 
-- commonMain: shared UI (Compose), NIP implementations, networking
+- commonMain: shared NIP implementations, managers, view models, networking
+- uiComposeMain: shared Compose UI for Android, desktop and iOS
 - androidMain: EncryptedSharedPreferences, Android crypto
 - jvmMain: Desktop crypto (secp256k1-kmp), JVM Preferences
-- jsMain: NIP-07 browser extension, JS Ktor client
-- wasmJsMain: WebAssembly target
+- jsMain: NIP-07 browser extension, JS Ktor client, DOM-based web UI (the build live at web.nostrord.com)
 
 ## Supported NIPs
 
 - NIP-01: Basic protocol (event signing, subscriptions)
-- NIP-04: Encrypted direct messages
+- NIP-02: Follow list
+- NIP-04: Encrypted direct messages (legacy, kept for compatibility)
+- NIP-05: DNS-based identifiers (displayed only, no .well-known verification)
 - NIP-07: Browser signer extension API
+- NIP-09: Event deletion
+- NIP-11: Relay information document
+- NIP-17: Private direct messages (gift wrap)
 - NIP-19: bech32 entities (npub, nsec, note, nevent)
+- NIP-22: Comments (kind:1111, used for threads)
+- NIP-25: Reactions
+- NIP-27: Text note references and mentions
 - NIP-29: Relay-based groups (core protocol)
+- NIP-30: Custom emoji
 - NIP-42: Authentication to relays
 - NIP-44: Versioned encryption
 - NIP-46: Remote signer (bunker)
+- NIP-49: Private key encryption (ncryptsec)
+- NIP-51: Lists (mute list)
+- NIP-55: Android signer application (Amber or any compatible signer)
+- NIP-56: Reporting
+- NIP-57: Lightning zaps
+- NIP-59: Gift wrap
 - NIP-65: Relay list metadata
+- NIP-92: Media attachments (`imeta` tags)
+- NIP-78: Application-specific data (kind:30078)
+- NIP-84: Highlights
+- NIP-96: HTTP file storage
+- NIP-98: HTTP authentication
 
 ## Platform Support
 
 - Web: https://web.nostrord.com/
-- Android: APK builds, Google Play (planned)
-- Desktop: Windows, macOS, Linux (JVM)
+- Android: APK available on GitHub Releases (Google Play planned)
+- Windows: MSI installer available on GitHub Releases
+- macOS: DMG (Apple Silicon) available on GitHub Releases
+- Linux: .deb and .rpm (x64) on GitHub Releases, and an Arch package published to the AUR as `nostrord-bin`
 - iOS: in development
+
+Downloads page: https://nostrord.com/download/
+Latest release: https://github.com/nostrord/nostrord/releases/latest
 
 ## Funding
 
