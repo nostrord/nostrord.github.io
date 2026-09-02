@@ -5,7 +5,7 @@
       "namespace": "android_app",
       "package_name": "org.nostr.nostrord",
       "sha256_cert_fingerprints": [
-        "TODO:REPLACE_WITH_YOUR_SIGNING_KEY_SHA256_FINGERPRINT"
+        "FF:4B:7B:C7:5E:E5:D7:8B:B5:F8:D8:C4:32:09:4F:D9:56:3C:C0:C1:FD:75:CF:C9:61:57:E4:EA:7B:65:14:98"
       ]
     }
   }

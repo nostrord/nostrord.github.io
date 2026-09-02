@@ -15,7 +15,16 @@
       return 'macos';
     }
     if (/win/.test(plat) || /windows/.test(ua)) return 'windows';
-    if (/linux/.test(plat) || /linux/.test(ua)) return 'linux';
+    if (/linux/.test(plat) || /linux/.test(ua)) {
+      // Browsers rarely expose the distro. Use UA hints when present; otherwise
+      // fall back to generic 'linux' so we recommend the universal AppImage
+      // instead of guessing (e.g. Arch and vanilla Chrome expose no distro).
+      if (/ubuntu|debian|linux mint|pop!?_?os|elementary/.test(ua)) return 'debian';
+      if (/fedora|red ?hat|rhel|centos|rocky|alma|opensuse|suse/.test(ua)) return 'fedora';
+      // \b keeps 'aarch64' from matching 'arch': an ARM box is not Arch Linux.
+      if (/\b(arch|archlinux|manjaro|endeavour|garuda|artix)\b/.test(ua)) return 'archlinux';
+      return 'linux';
+    }
     return 'unknown';
   }
 
@@ -25,6 +34,21 @@
     if (/arm64|aarch64/.test(ua) || /arm/.test(plat) && !/intel/.test(ua)) return 'arm64';
     if (/x86_64|x64|win64|wow64/.test(ua)) return 'x64';
     return null;
+  }
+
+  // navigator.userAgentData is Chromium only and asynchronous, but it answers the
+  // one thing a UA string cannot state reliably: whether the CPU is ARM. Firefox
+  // and Safari never shipped it, so UA sniffing stays as the fallback.
+  function detectArchAsync() {
+    var fallback = detectArch();
+    var uad = navigator.userAgentData;
+    if (!uad || typeof uad.getHighEntropyValues !== 'function') return Promise.resolve(fallback);
+    return uad.getHighEntropyValues(['architecture', 'bitness']).then(function(v) {
+      if (!v || !v.architecture) return fallback;
+      if (v.architecture === 'arm') return v.bitness === '64' ? 'arm64' : 'arm';
+      if (v.architecture === 'x86') return v.bitness === '64' ? 'x64' : 'x86';
+      return fallback;
+    })['catch'](function() { return fallback; });
   }
 
   // ── Asset classification ────────────────────────────────────────────────
@@ -243,9 +267,9 @@
 
     // Pick primary asset for detected platform
     var detected = detectPlatform();
-    var detectedArch = detectArch();
-    var primaryAsset = pickPrimary(classified, detected, detectedArch);
-    renderPrimary(primaryAsset, detected, classified);
+    detectArchAsync().then(function(detectedArch) {
+      renderPrimary(pickPrimary(classified, detected, detectedArch), detected, classified, detectedArch);
+    });
 
     // All downloads
     renderAll(classified);
@@ -258,13 +282,46 @@
     }
   }
 
-  var LINUX_FALLBACKS = ['debian', 'fedora', 'linux'];
+  // For a known distro, prefer its native package, then the universal AppImage.
+  // For unknown Linux (browser exposes no distro, e.g. Arch or vanilla Chrome),
+  // recommend the AppImage so we never push a .deb onto a non-Debian system.
+  var LINUX_CANDIDATES = {
+    linux:     ['linux', 'debian', 'fedora'],
+    debian:    ['debian', 'linux', 'fedora'],
+    fedora:    ['fedora', 'linux', 'debian'],
+    archlinux: ['archlinux', 'linux']
+  };
+
+  var LINUX_PLATFORMS = ['linux', 'debian', 'fedora', 'archlinux'];
+
+  function findAsset(assets, platform) {
+    if (!assets) return null;
+    for (var i = 0; i < assets.length; i++) {
+      if (assets[i].platform === platform) return assets[i];
+    }
+    return null;
+  }
 
   function pickPrimary(assets, platform, arch) {
-    var candidates = platform === 'linux' ? LINUX_FALLBACKS : [platform];
+    var candidates = LINUX_CANDIDATES[platform] || [platform];
     var matches = assets.filter(function(a) { return candidates.indexOf(a.platform) !== -1; });
     if (matches.length === 0) return null;
-    matches.sort(function(a, b) { return candidates.indexOf(a.platform) - candidates.indexOf(b.platform); });
+    // A binary for the wrong architecture will not run: x86_64 Linux builds on an
+    // ARM box (Raspberry Pi, ARM Chromebook, Asahi), or an Apple Silicon .dmg on an
+    // Intel Mac. Windows is the exception, since Windows on ARM emulates x64.
+    var strictArch = LINUX_PLATFORMS.indexOf(platform) !== -1 || platform === 'macos';
+    if (arch && strictArch) {
+      var native = matches.filter(function(a) { return a.arch === arch; });
+      var portable = matches.filter(function(a) { return a.arch === 'universal' || !a.arch; });
+      if (native.length === 0 && portable.length === 0) return null;
+      matches = native.length ? native : portable;
+    }
+    // Order by platform preference, then favour AppImage over a plain archive.
+    matches.sort(function(a, b) {
+      var d = candidates.indexOf(a.platform) - candidates.indexOf(b.platform);
+      if (d !== 0) return d;
+      return (a.label === 'AppImage' ? 0 : 1) - (b.label === 'AppImage' ? 0 : 1);
+    });
     if (arch) {
       var archMatch = matches.filter(function(a) { return a.arch === arch; });
       if (archMatch.length) return archMatch[0];
@@ -291,14 +348,22 @@
     }
   }
 
-  function renderPrimary(asset, platform, allAssets) {
+  function renderPrimary(asset, platform, allAssets, arch) {
     var content = document.getElementById('primary-content');
     if (!asset) {
       var name = PLATFORM_NAMES[platform] || 'your platform';
+      var armLinux = arch === 'arm64' && LINUX_PLATFORMS.indexOf(platform) !== -1;
+      var intelMac = arch === 'x64' && platform === 'macos';
+      if (armLinux) name = 'Linux on ARM';
+      if (intelMac) name = 'Intel Macs';
       content.innerHTML =
         '<div class="state-box">' +
           '<h3>No build for ' + escapeHtml(name) + ' yet</h3>' +
-          "<p>This release doesn't include a binary for your detected platform. Try one of the other downloads below, use the web app, or build from source.</p>" +
+          (armLinux
+            ? "<p>The Linux builds in this release are x86_64 only, so none of them will run on your ARM machine. Use the web app, or build from source.</p>"
+            : intelMac
+            ? "<p>The macOS build in this release is Apple Silicon only, so it will not run on an Intel Mac. Use the web app, or build from source.</p>"
+            : "<p>This release doesn't include a binary for your detected platform. Try one of the other downloads below, use the web app, or build from source.</p>") +
           '<a href="https://web.nostrord.com/" target="_blank" rel="noopener noreferrer" class="btn-secondary">Open web app' + EXT_ICON + '</a>' +
         '</div>';
       return;
@@ -327,6 +392,24 @@
               '<button class="copy-btn" data-cmd="yay -S nostrord-bin">Copy</button>' +
             '</div>';
           }
+          if (p === 'linux' && asset.label === 'AppImage') {
+            var run = 'chmod +x ' + asset.name + ' && ./' + asset.name;
+            // No browser reports the distro, so the AppImage is the safe default.
+            // Point the package-based distros at their own file instead of guessing.
+            var alts = [];
+            var deb = findAsset(allAssets, 'debian');
+            var rpm = findAsset(allAssets, 'fedora');
+            if (deb) alts.push('on Debian or Ubuntu take the <a href="' + deb.url + '">.deb</a>');
+            if (rpm) alts.push('on Fedora the <a href="' + rpm.url + '">.rpm</a>');
+            return '<div class="pacman-cmd">' +
+              '<code>' + escapeHtml(run) + '</code>' +
+              '<button class="copy-btn" data-cmd="' + escapeHtml(run) + '">Copy</button>' +
+            '</div>' +
+            (alts.length ? '<p class="asset-note">Your browser does not report the distro, so this is the universal build: ' + alts.join(', ') + '.</p>' : '');
+          }
+          if (p === 'macos' && asset.arch === 'arm64') {
+            return '<p class="asset-note">Apple Silicon only. On an Intel Mac, use the web app instead.</p>';
+          }
           if (p === 'debian' || p === 'fedora') {
             var installCmd = (p === 'debian' ? 'sudo apt install ./' : 'sudo dnf install ./') + asset.name;
             return '<div class="pacman-cmd">' +
@@ -340,7 +423,7 @@
         '<div class="file-meta">' + escapeHtml(asset.name) + '</div>' +
         '<a href="#all-section" class="alt-link">Looking for another platform? See all downloads &darr;</a>' +
       '</div>';
-    if (asset.platform === 'archlinux' || asset.platform === 'debian' || asset.platform === 'fedora') attachCopyListeners(content);
+    attachCopyListeners(content);
   }
 
   function renderAll(assets) {

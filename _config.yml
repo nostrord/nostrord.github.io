@@ -34,3 +34,9 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - Makefile
+
+# The github-pages gem defaults to jekyll-theme-primer when no theme is set.
+# That theme ships assets/css/style.scss, which competes for the same output path
+# as our own stylesheet and sometimes wins, serving normalize.css and rendering
+# the site unstyled. We use our own layouts, so no theme.
+theme: null
