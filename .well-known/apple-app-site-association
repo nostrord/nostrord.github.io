@@ -4,7 +4,13 @@
     "details": [
       {
         "appID": "TEAM_ID.org.nostr.nostrord",
-        "paths": ["/?relay=*", "/*?relay=*"]
+        "appIDs": ["TEAM_ID.org.nostr.nostrord"],
+        "paths": ["/open*", "/?relay=*", "/*?relay=*"],
+        "components": [
+          { "/": "/open*", "comment": "Open and launch links (with or without relay/group)" },
+          { "/": "/", "?": { "relay": "?*" }, "comment": "Legacy invite links carrying a relay" },
+          { "/": "/*", "?": { "relay": "?*" }, "comment": "Legacy invite links carrying a relay" }
+        ]
       }
     ]
   }
