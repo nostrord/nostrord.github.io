@@ -444,3 +444,36 @@ a.store-card-live:hover {
   .store-card-body p { font-size: 0.78rem; }
   .pacman-cmd { width: 100%; }
 }
+
+.section-note {
+  margin: 1.75rem auto 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.asset-note {
+  margin-top: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* --violet is the brand tone, tuned for buttons. At 0.85rem on the card
+   background it falls below a readable contrast, so links here run lighter on
+   dark and darker on light. */
+.asset-note a {
+  color: #b3a0ff;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.asset-note a:hover {
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .asset-note a {
+  color: var(--violet-dim);
+}
